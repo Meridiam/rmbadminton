@@ -1,0 +1,24 @@
+{
+  "name": "rmbadmintonwebapp",
+  "version": "1.0.0",
+  "description": "webapp for the badminton club at Richard Montgomery High School",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jere407407/ppaw.git"
+  },
+  "author": "Jerry Peng",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jere407407/ppaw/issues"
+  },
+  "homepage": "https://github.com/jere407407/ppaw#readme",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.10"
+  }
+}
