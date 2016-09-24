@@ -14,16 +14,16 @@ app.get('/p', function(req,res) {
 	res.send("id is set to " + req.query.id);
 });
 
-app.get('bootstrap/css/bootstrap.min.css', function(req,res) {
+app.get('/bootstrap/css/bootstrap.min.css', function(req,res) {
     res.sendFile("bootstrap/css/bootstrap.min.css", options);
 });
 
-app.get('jquery/jquery.min.js', function(req,res) {
+app.get('/jquery/jquery.min.js', function(req,res) {
     res.sendFile("jquery/jquery.min.js", options);
 });
 
-app.get('jquery/jquery.min.js', function(req,res) {
-    res.sendFile("jquery/jquery.min.js", options);
+app.get('/bootstrap/js/bootstrap.min.js', function(req,res) {
+    res.sendFile("bootstrap/js/bootstrap.min.js", options);
 });
 
 http.createServer(app).listen(process.env.PORT || 3000);
