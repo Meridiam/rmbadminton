@@ -26,4 +26,12 @@ app.get('/bootstrap/js/bootstrap.min.js', function(req,res) {
     res.sendFile("bootstrap/js/bootstrap.min.js", options);
 });
 
+app.get('/bootstrap/css/temp.css', function(req,res) {
+    res.sendFile("/bootstrap/css/temp.css", options);
+});
+
+app.get('/bootstrap/css/bootstrap.min.css.map', function(req,res) {
+    res.sendFile("/bootstrap/css/bootstrap.min.css.map", options);
+});
+
 http.createServer(app).listen(process.env.PORT || 3000);
