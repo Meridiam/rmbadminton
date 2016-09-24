@@ -31,7 +31,11 @@ app.get('/bootstrap/css/custom.css', function(req,res) {
 });
 
 app.get('/bootstrap/css/bootstrap.min.css.map', function(req,res) {
-    res.sendFile("/bootstrap/css/bootstrap.min.css.map", options);
+    res.sendFile("bootstrap/css/bootstrap.min.css.map", options);
+});
+
+app.get('/loop.mp4', function(req,res){
+    res.sendFile("loop.mp4", options);
 });
 
 http.createServer(app).listen(process.env.PORT || 3000);
