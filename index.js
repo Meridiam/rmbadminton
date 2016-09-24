@@ -11,7 +11,7 @@ app.get('/', function(req,res) {
 });
 
 app.get('/p', function(req,res) {
-	res.send("id is set to " + req.query.tagID);
+	res.send("id is set to " + req.query.id);
 });
 
 http.createServer(app).listen(process.env.PORT || 3000);
