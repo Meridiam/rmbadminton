@@ -5,3 +5,6 @@
 .center-text {
     text-align: center;
 }
+.navbar .navbar-default .navbar-static-top{
+    margin-bottom:0;
+}
