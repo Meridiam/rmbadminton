@@ -15,7 +15,7 @@ app.get('/p', function(req,res) {
 });
 
 app.get('/m', function(req,res) {
-	res.sendFile("/public/mobile.html");
+	res.sendFile("/public/mobile.html", options);
 });
 
 app.use(express.static('public'));
