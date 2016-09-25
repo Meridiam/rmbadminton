@@ -14,6 +14,10 @@ app.get('/p', function(req,res) {
 	res.send("id is set to " + req.query.id);
 });
 
+app.get('/m', function(req,res) {
+	res.sendFile("/public/mobile.html");
+});
+
 app.use(express.static('public'));
 app.use(express.static('assets'));
 
