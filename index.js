@@ -1,21 +1,29 @@
 var express = require('express');
 var app = express();
 var http = require('http');
+var useragent = require('express-useragent')
 
 var options = {
     root: __dirname
 };
 
+app.use(useragent.express());
+
+
 app.get('/', function(req,res) {
-	res.sendFile("/public/index.html",options);
+    if(req.useragent.isMobile==true){
+        res.sendFile("/public/mobile.html", options);
+    } else {
+	    res.sendFile("/public/index.html", options);
+	}
 });
 
-app.get('/p', function(req,res) {
+app.get('/ua', function(req,res){
+    res.send(req.useragent);
+});
+
+app.get('/id', function(req,res) {
 	res.send("id is set to " + req.query.id);
-});
-
-app.get('/m', function(req,res) {
-	res.sendFile("/public/mobile.html", options);
 });
 
 app.use(express.static('public'));
