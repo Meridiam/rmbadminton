@@ -41,7 +41,7 @@ app.get('/id', function(req,res) {
 });
 
 app.get('/t', function(req,res){
-    res.send(JSON.stringify(req));
+    res.send(req);
 });
 
 app.use(express.static('public'));
