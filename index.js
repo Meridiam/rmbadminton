@@ -1,14 +1,28 @@
 var express = require('express');
 var app = express();
+
 var http = require('http');
+
 var useragent = require('express-useragent')
+app.use(useragent.express());
+
+var pg = require('pg');
+pg.defaults.ssl = true;
+
+pg.connect(process.env.DATABASE_URL, function(err, client) {
+  if (err) throw err;
+  console.log('Connected to postgres! Getting schemas...');
+
+  client
+    .query('SELECT table_schema,table_name FROM information_schema.tables;')
+    .on('row', function(row) {
+      console.log(JSON.stringify(row));
+    });
+});
 
 var options = {
     root: __dirname
 };
-
-app.use(useragent.express());
-
 
 app.get('/', function(req,res) {
     if(req.useragent.isMobile==true){
@@ -23,7 +37,7 @@ app.get('/ua', function(req,res){
 });
 
 app.get('/id', function(req,res) {
-	res.send("id is set to " + req.query.id);
+	res.send("query: " + req.query.id);
 });
 
 app.use(express.static('public'));
