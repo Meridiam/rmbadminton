@@ -40,10 +40,6 @@ app.get('/id', function(req,res) {
 	res.send("query: " + req.query.id);
 });
 
-app.get('/t', function(req,res){
-    res.send(req);
-});
-
 app.use(express.static('public'));
 app.use(express.static('assets'));
 
