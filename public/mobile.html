@@ -25,7 +25,7 @@
 	<body>
 		<div class="jumbotron text-center" style="margin-bottom:0;background-color:#07151D">
 			<!--<video src="/loop.mp4" width=100% height=75% autoplay="autoplay" loop style="margin-top: 0px; display: block;"> </video>-->
-			<img src="loop.gif" alt="Logo" width=100%>
+			<img src="/img/loop.gif" alt="Logo" width=100%>
 		</div>
 		<nav class="navbar navbar-default" style="margin-bottom:0">
 			<div class="container-fluid">
@@ -62,7 +62,7 @@
 						<button type="submit" class="btn btn-default">Search</button>
 					</form>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">Member Login</a></li>
+						<li><a data-toggle="modal" href="#modalLogin">Login</a></li>
 					</ul>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
@@ -79,6 +79,26 @@
 				and exciting! This website will eventually replace email announcements, and automatated emails will be sent to every member on our mailing list.
 				If you would like to offer feedback/ideas on how the website could be improved, don't hesitate to send suggestions to rmbmtn@gmail.com!</p>
 				<!--</div>-->
+			</div>
+		</div>
+		<!--Modal content goes between content and footer-->
+		<div id="modalLogin" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Log In/Sign Up</h4>
+					</div>
+					<div class="modal-body">
+						<p>Placeholder Text</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
 			</div>
 		</div>
 			<!--</div>-->
