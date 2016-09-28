@@ -6,7 +6,7 @@ var http = require('http');
 var useragent = require('express-useragent')
 app.use(useragent.express());
 
-var pg = require('pg');
+/*var pg = require('pg');
 pg.defaults.ssl = true;
 
 pg.connect(process.env.DATABASE_URL, function(err, client) {
@@ -18,7 +18,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client) {
     .on('row', function(row) {
       console.log(JSON.stringify(row));
     });
-});
+});*/
 
 var options = {
     root: __dirname

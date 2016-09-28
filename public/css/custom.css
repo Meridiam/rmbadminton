@@ -1,3 +1,13 @@
 .post {
     margin-bottom:25px
 }
+.musico .mustoggle {
+    color:#777777;
+}
+.musico:hover .musoverlay,
+.musico .mustoggle {
+    display: none;
+}
+.musico:hover .mustoggle {
+    display: inline;
+}

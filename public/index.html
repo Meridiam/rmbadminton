@@ -25,17 +25,17 @@
 		var buttontext = document.getElementById('musictoggle');
 		if (audioElem.paused) {
    			audioElem.play();
-   			buttontext.className="fa fa-pause";
+   			buttontext.className="fa fa-pause fa-fw mustoggle";
   		} else {
     		audioElem.pause();
-    		buttontext.className="fa fa-play";
+    		buttontext.className="fa fa-play fa-fw mustoggle";
     	}
     }
 </script>
 </head>
 	<body>
 		<div class="jumbotron text-center" style="margin-bottom:0;background-color:#07151D">
-			<video src="/vid/loop.mp4" width=50% height=50% autoplay loop style="margin-top:0px;width:960px;margin-left:auto;margin-right:auto">
+			<video src="/vid/loop.mp4" width=25% height=25% autoplay loop style="margin-top:0px;width:960px;margin-left:auto;margin-right:auto">
                 Your browser does not support the video tag.
             </video>
 			<!--<img src="loop.gif" alt="Logo"> Mobile Only-->
@@ -80,7 +80,10 @@
 					</form>
 					<ul class="nav navbar-nav navbar-right">
 						<li><a data-toggle="modal" href="#modalLogin">Login</a></li>
-						<li><a type="button" onclick="musictoggle();"><i id="musictoggle" class="fa fa-pause" aria-hidden="true"></i></a></li>
+						<li><a type="button" class="musico" onclick="musictoggle();">
+							<i id="musictoggle" class="fa fa-pause fa-fw mustoggle" aria-hidden="true"></i>
+							<i id="musoverlay" class="fa fa-music fa-fw musoverlay" aria-hidden="true"></i>
+						</a></li>
 					</ul>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
