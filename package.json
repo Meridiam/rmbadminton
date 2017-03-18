@@ -17,11 +17,22 @@
   },
   "homepage": "https://github.com/jere407407/ppaw#readme",
   "dependencies": {
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.1",
     "express-useragent": "^1.0.3",
     "jquery": "^3.1.0",
+    "method-override": "^2.3.7",
     "mongodb": "^2.2.10",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "passport-google": "^0.3.0",
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
     "pg": "^6.1.0",
-    "pug": "^2.0.0-beta6"
+    "pug": "^2.0.0-beta6",
+    "q": "^1.4.1"
   }
 }
