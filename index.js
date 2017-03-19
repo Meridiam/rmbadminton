@@ -157,7 +157,7 @@ app.use(express.static('assets'));
 
 //displays our homepage
 app.get('/', function(req, res){
-    res.render('home', {user: req.user});
+    res.render('signin', {user: req.user});
 });
 
 //displays our signup page
