@@ -7,83 +7,161 @@ var passport = require('passport'),
     methodOverride = require('method-override'),
     session = require('express-session'),
     LocalStrategy = require('passport-local'),
-    TwitterStrategy = require('passport-twitter');
+    TwitterStrategy = require('passport-twitter').Strategy;
 
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var FacebookStrategy = require('passport-facebook');
-
-//We will be creating these two files shortly
-var config = require('./config.js'), //config file contains all tokens and other private info
-    funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
+var FacebookStrategy = require('passport-facebook').Strategy;
+var bCrypt = require('bcryptjs');
+var Q = require('q');
 
 var http = require('http');
 
-var useragent = require('express-useragent')
+var User = require('./models/user.js');
+
+var useragent = require('express-useragent');
 app.use(useragent.express());
 
+//===============MONGOOSE=================
+var dbConfig = require('./db.js');
+var mongoose = require('mongoose');
+mongoose.connect(dbConfig.url);
 
 //===============PASSPORT=================
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
-    console.log("serializing " + user.username);
-    done(null, user);
+    done(null, user._id);
 });
 
-passport.deserializeUser(function(obj, done) {
-    console.log("deserializing " + obj);
-    done(null, obj);
+passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+        done(err, user);
+    });
 });
 
 // Use the LocalStrategy within Passport to login/"signin" users.
-passport.use('local-signin', new LocalStrategy(
-    {passReqToCallback : true}, //allows us to pass back the request to the callback
+passport.use('local-signin', new LocalStrategy({
+        passReqToCallback : true
+    },
     function(req, username, password, done) {
-        funct.localAuth(username, password)
-            .then(function (user) {
-                if (user) {
-                    console.log("LOGGED IN AS: " + user.username);
-                    req.session.success = 'You are successfully logged in ' + user.username + '!';
-                    done(null, user);
+        // check in mongo if a user with username exists or not
+        User.findOne({ 'username' :  username },
+            function(err, user) {
+                // In case of any error, return using the done method
+                if (err)
+                    return done(err);
+                // Username does not exist, log the error and redirect back
+                if (!user){
+                    console.log('User Not Found with username '+username);
+                    return done(null, false, req.flash('message', 'User Not found.'));
                 }
-                if (!user) {
-                    console.log("COULD NOT LOG IN");
-                    req.session.error = 'Could not log user in. Please try again.'; //inform user could not log them in
-                    done(null, user);
+                // User exists but wrong password, log the error
+                if (!isValidPassword(user, password)){
+                    console.log('Invalid Password');
+                    return done(null, false, req.flash('message', 'Invalid Password')); // redirect back to login page
                 }
-            })
-            .fail(function (err){
-                console.log(err.body);
-            });
-    }
-));
-// Use the LocalStrategy within Passport to register/"signup" users.
-passport.use('local-signup', new LocalStrategy(
-    {passReqToCallback : true}, //allows us to pass back the request to the callback
-    function(req, username, password, firstname, lastname, done) {
-        funct.localReg(username, password, firstname, lastname)
-            .then(function (user) {
-                if (user) {
-                    console.log("REGISTERED: " + user.username);
-                    req.session.success = 'You are successfully registered and logged in ' + user.username + user.firstname + user.lastname + '!';
-                    done(null, user);
-                }
-                if (!user) {
-                    console.log("COULD NOT REGISTER");
-                    req.session.error = 'That username is already in use, please try a different one.'; //inform user could not log them in
-                    done(null, user);
-                }
-            })
-            .fail(function (err){
-                console.log(err.body);
-            });
-    }
-));
+                // User and password both match, return user from done method
+                // which will be treated like success
+                return done(null, user);
+            }
+        );
 
-var user = {
-    "username": [],
-    "password": []
-}
+    })
+);
+
+
+var isValidPassword = function(user, password){
+    return bCrypt.compareSync(password, user.password);
+};
+// Use the LocalStrategy within Passport to register/"signup" users.
+passport.use('local-signup', new LocalStrategy({
+        passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+    function(req, username, password, done) {
+
+        findOrCreateUser = function(){
+            // find a user in Mongo with provided username
+            User.findOne({ 'username' :  username }, function(err, user) {
+                // In case of any error, return using the done method
+                if (err){
+                    console.log('Error in SignUp: '+err);
+                    return done(err);
+                }
+                // already exists
+                if (user) {
+                    console.log('User already exists with username: '+username);
+                    return done(null, false, req.flash('message','User Already Exists'));
+                } else {
+                    // if there is no user with that email
+                    // create the user
+                    var newUser = new User();
+
+                    // set the user's local credentials
+                    newUser.username = username;
+                    newUser.password = createHash(password);
+                    newUser.email = req.param('email');
+                    newUser.firstname = req.param('firstname');
+                    newUser.lastname = req.param('lastname');
+
+                    // save the user
+                    newUser.save(function(err) {
+                        if (err){
+                            console.log('Error in Saving user: '+err);
+                            throw err;
+                        }
+                        console.log('User Registration succesful');
+                        return done(null, newUser);
+                    });
+                }
+            });
+        };
+        // Delay the execution of findOrCreateUser and execute the method
+        // in the next tick of the event loop
+        process.nextTick(findOrCreateUser);
+    })
+);
+
+var findOrCreate = function(username, password){
+    // find a user in Mongo with provided username
+    User.findOne({ 'username' :  username }, function(err, user) {
+        // In case of any error, return using the done method
+        if (err){
+            console.log('Error in SignUp: '+err);
+            return done(err);
+        }
+        // already exists
+        if (user) {
+            console.log('User already exists with username: '+username);
+            return done(null, false, req.flash('message','User Already Exists'));
+        } else {
+            // if there is no user with that email
+            // create the user
+            var newUser = new User();
+
+            // set the user's local credentials
+            newUser.username = username;
+            newUser.password = createHash(password);
+            newUser.email = req.param('email');
+            newUser.firstname = req.param('firstname');
+            newUser.lastname = req.param('lastname');
+
+            // save the user
+            newUser.save(function(err) {
+                if (err){
+                    console.log('Error in Saving user: '+err);
+                    throw err;
+                }
+                console.log('User Registration succesful');
+                return done(null, newUser);
+            });
+        }
+    });
+};
+
+// Generates hash using bCrypt
+var createHash = function(password){
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+};
 
 passport.use(new GoogleStrategy({
         clientID: "114380784743-am5ep4etkkdm6hoa0g1cjvnodpkk0p6m.apps.googleusercontent.com",
@@ -91,12 +169,35 @@ passport.use(new GoogleStrategy({
         callbackURL: "http://rmbadminton.herokuapp.com/auth/google/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-        User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        User.findOrCreateUser({ username: profile.displayName, email: profile.emails.value, firstname: profile.name.givenName, lastname: profile.name.familyName }, function (err, user) {
             return done(err, user);
         });
     }
 ));
 
+passport.use(new FacebookStrategy({
+        clientID: "1708125412812130",
+        clientSecret: "27fa89d2ee7c68bbd1f3cd1906a960af",
+        callbackURL: "http://rmbadminton.herokuapp.com/auth/facebook/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+        User.findOrCreate({ username: profile.displayName, email: profile.emails.value, firstname: profile.name.givenName, lastname: profile.name.familyName }, function (err, user) {
+            return done(err, user);
+        });
+    }
+));
+
+passport.use(new TwitterStrategy({
+        clientID: "vUVM9VMcLuRuZw63rKX22RgtB",
+        clientSecret: "UBsjVRnHqTtsuUoCsU41pJixBu9mLD3LxaTQeyCzVIFcTEMJw5",
+        callbackURL: "http://rmbadminton.herokuapp.com/auth/twitter/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+        User.findOrCreate({ username: profile.displayName, email: profile.emails.value, firstname: profile.name.givenName, lastname: profile.name.familyName }, function (err, user) {
+            return done(err, user);
+        });
+    }
+));
 
 //EXPRESS
 app.use(cookieParser());
@@ -134,22 +235,6 @@ var options = {
     root: __dirname
 };
 
-/*app.get('/', function(req,res) {
-    if(req.useragent.isMobile==true){
-        res.sendFile("/public/mobile.html", options);
-    } else {
-	    res.sendFile("/public/index.html", options);
-	}
-});
-
-app.get('/ua', function(req,res){
-    res.send(req.useragent);
-});
-
-app.get('/id', function(req,res) {
-	res.send("query: " + req.query.id);
-});*/
-
 app.use(express.static('public'));
 app.use(express.static('assets'));
 
@@ -163,10 +248,6 @@ app.get('/', function(req, res){
 //displays our signup page
 app.get('/signup', function(req, res){
     res.render('signup');
-});
-
-app.get('/SUCC', function(req, res){
-    res.render('')
 });
 
 //sends the request through our local signup strategy, and if successful takes user to homepage, otherwise returns then to signin page
@@ -184,11 +265,23 @@ app.get('/auth/google',
     });
 
 app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/' }),
+    passport.authenticate('google', { failureRedirect: '/signup' }),
     function(req, res) {
         // Successful authentication, redirect home.
-        res.redirect('/SUCC');
+        res.redirect('/');
     });
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { successRedirect: '/',
+        failureRedirect: '/signup' }));
+
+app.get('/auth/twitter', passport.authenticate('twitter'));
+
+app.get('/auth/twitter/callback',
+    passport.authenticate('twitter', { successRedirect: '/',
+        failureRedirect: '/signup' }));
 
 //sends the request through our local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page
 app.post('/login', passport.authenticate('local-signin', {
