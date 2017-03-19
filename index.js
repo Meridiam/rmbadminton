@@ -21,7 +21,6 @@ var Membership = require('./models/membership.js');
 
 var useragent = require('express-useragent');
 app.use(useragent.express());
-
 //===============MONGOOSE=================
 var dbConfig = require('./db.js');
 var mongoose = require('mongoose');
@@ -42,7 +41,7 @@ passport.deserializeUser(function(id, done) {
 
 // Use the LocalStrategy within Passport to login/"signin" users.
 passport.use('local-signin', new LocalStrategy({
-        passReqToCallback : true
+        passReqToCallBack: true
     },
     function(req, username, password, done) {
         // check in mongo if a user with username exists or not
@@ -76,7 +75,7 @@ var isValidPassword = function(user, password){
 };
 // Use the LocalStrategy within Passport to register/"signup" users.
 passport.use('local-signup', new LocalStrategy({
-        passReqToCallback : true // allows us to pass back the entire request to the callback
+        passReqToCallBack: true // allows us to pass back the entire request to the callback
     },
     function(req, username, password, done) {
 
@@ -146,7 +145,7 @@ passport.use(new GoogleStrategy({
                     providerUserId: profile.id,
                     accessToken: accessToken,
                     displayname: profile.displayName,
-                    //email: profile.emails[0].value,
+                    email: profile.emails[0].value,
                     firstname: profile.name.givenName,
                     lastname: profile.name.familyName
                 });
