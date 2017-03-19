@@ -7,9 +7,10 @@ var passport = require('passport'),
     methodOverride = require('method-override'),
     session = require('express-session'),
     LocalStrategy = require('passport-local'),
-    TwitterStrategy = require('passport-twitter'),
-    GoogleStrategy = require('passport-google'),
-    FacebookStrategy = require('passport-facebook');
+    TwitterStrategy = require('passport-twitter');
+
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var FacebookStrategy = require('passport-facebook');
 
 //We will be creating these two files shortly
 // var config = require('./config.js'), //config file contains all tokens and other private info
@@ -23,7 +24,17 @@ app.use(useragent.express());
 
 //PASSPORT
 
-
+passport.use(new GoogleStrategy({
+        clientID: "114380784743-am5ep4etkkdm6hoa0g1cjvnodpkk0p6m.apps.googleusercontent.com",
+        clientSecret: "Hh0eq0U_ye5ZGsaYR_BI7uqp",
+        callbackURL: "/auth/google/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+        User.findOrCreate({ googleId: profile.id }, function (err, user) {
+            return done(err, user);
+        });
+    }
+));
 
 //POSTGRESQL
 /*var pg = require('pg');
@@ -77,7 +88,7 @@ var options = {
     root: __dirname
 };
 
-app.get('/', function(req,res) {
+/*app.get('/', function(req,res) {
     if(req.useragent.isMobile==true){
         res.sendFile("/public/mobile.html", options);
     } else {
@@ -91,14 +102,63 @@ app.get('/ua', function(req,res){
 
 app.get('/id', function(req,res) {
 	res.send("query: " + req.query.id);
-});
+});*/
 
 app.use(express.static('public'));
 app.use(express.static('assets'));
 
 //ROUTES
 
+//displays our homepage
+app.get('/', function(req, res){
+    res.render('home', {user: req.user});
+});
 
+//displays our signup page
+app.get('/signin', function(req, res){
+    res.render('signin');
+});
+
+app.get('/SUCC', function(req, res){
+    res.render('')
+});
+
+//sends the request through our local signup strategy, and if successful takes user to homepage, otherwise returns then to signin page
+app.post('/local-reg', passport.authenticate('local-signup', {
+        successRedirect: '/',
+        failureRedirect: '/signin'
+    })
+);
+
+app.get('/auth/google',
+    passport.authenticate('google', { scope: 'https://www.google.com/m8/feeds' }),
+    function(req, res){
+        // The request will be redirected to Google for authentication, so
+        // this function will not be called.
+    });
+
+app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/' }),
+    function(req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/SUCC');
+    });
+
+//sends the request through our local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page
+app.post('/login', passport.authenticate('local-signin', {
+        successRedirect: '/',
+        failureRedirect: '/signin'
+    })
+);
+
+//logs user out of site, deleting them from the session, and returns to homepage
+app.get('/logout', function(req, res){
+    var name = req.user.username;
+    console.log("LOGGIN OUT " + req.user.username)
+    req.logout();
+    res.redirect('/');
+    req.session.notice = "You have successfully been logged out " + name + "!";
+});
 
 //PORT
 
