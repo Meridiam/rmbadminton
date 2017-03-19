@@ -53,8 +53,6 @@
                     {{user.firstname}}
                     <strong>Last Name:</strong>
                     {{user.lastname}}
-                    <strong>Provider:</strong>
-                    {{user.provider}}
                     </p>
                     </li>
                     <li>
@@ -99,11 +97,10 @@
 					</div>
 					<div class="modal-body">
 					<div class="mainbox">
-                      <h1 style="text-align:center;">Sign in</h1>
-                      <p style="text-align:center;margin-bottom: 25px">Please sign in with either Google, Twitter, Facebook, or a local account.</p>
+                      <h1 style="text-align:center;margin-bottom: 25px">Sign in</h1>
                       &nbsp;
                       <div style="text-align:center;" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-                      <form id="local-sign-in" class="form-horizontal ng-valid ng-dirty ng-valid-parse" action="/login" method="post">
+                      <form id="local-sign-in" class="form-signin ng-valid ng-dirty ng-valid-parse" action="/login" method="post">
                           <div style="margin-bottom: 25px" class="input-group">
                               <span class="input-group-addon">
                                            <i class="glyphicon glyphicon-user">
@@ -128,9 +125,9 @@
                       <p style="text-align:center;margin-top: 125px">
                       &nbsp;
                         <div style="text-align:center;margin-bottom: 25px">
-                        <div style="text-align:center;display:inline-block;"><a href="/auth/twitter" class="btn btn-info btn-lg" role="button"><span class="fa fa-fw fa-twitter"></span></a></div>
+                       <!-- <div style="text-align:center;display:inline-block;"><a href="/auth/twitter" class="btn btn-info btn-lg" role="button"><span class="fa fa-fw fa-twitter"></span></a></div>
                         <div style="text-align:center;display:inline-block;"><a href="/auth/google" class="btn btn-danger btn-lg" role="button"><span class="fa fa-fw fa-google"></span></a></div>
-                        <div style="text-align:center;display:inline-block;"><a href="/auth/facebook" class="btn btn-primary btn-lg" role="button"><span class="fa fa-fw fa-facebook"></span></a></div>
+                        <div style="text-align:center;display:inline-block;"><a href="/auth/facebook" class="btn btn-primary btn-lg" role="button"><span class="fa fa-fw fa-facebook"></span></a></div>-->
                         </div>
                         <div style="text-align:center;"><a href="/signup"> or Sign Up</a></div>
                       </p>
