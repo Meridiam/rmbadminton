@@ -17,6 +17,7 @@ var Q = require('q');
 var http = require('http');
 
 var User = require('./models/user.js');
+var Membership = require('./models/membership.js');
 
 var useragent = require('express-useragent');
 app.use(useragent.express());
@@ -121,43 +122,6 @@ passport.use('local-signup', new LocalStrategy({
     })
 );
 
-var findOrCreate = function(){
-    // find a user in Mongo with provided username
-    User.findOne({ 'username' :  username }, function(err, user) {
-        // In case of any error, return using the done method
-        if (err){
-            console.log('Error in SignUp: '+err);
-            return done(err);
-        }
-        // already exists
-        if (user) {
-            console.log('User already exists with username: '+username);
-            return done(null, false, req.flash('message','User Already Exists'));
-        } else {
-            // if there is no user with that email
-            // create the user
-            var newUser = new User();
-
-            // set the user's local credentials
-            newUser.username = username;
-            newUser.password = createHash(password);
-            newUser.email = req.param('email');
-            newUser.firstname = req.param('firstname');
-            newUser.lastname = req.param('lastname');
-
-            // save the user
-            newUser.save(function(err) {
-                if (err){
-                    console.log('Error in Saving user: '+err);
-                    throw err;
-                }
-                console.log('User Registration succesful');
-                return done(null, newUser);
-            });
-        }
-    });
-};
-
 // Generates hash using bCrypt
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
@@ -169,8 +133,31 @@ passport.use(new GoogleStrategy({
         callbackURL: "http://rmbadminton.herokuapp.com/auth/google/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-        User.findOrCreate({ username: profile.displayName, email: profile.emails.value, firstname: profile.name.givenName, lastname: profile.name.familyName }, function (err, user) {
-            return done(err, user);
+        Membership.findOne({
+            'providerUserId': profile.id
+        }, function(err, user) {
+            if (err) {
+                return done(err);
+            }
+            //No user was found... so create a new user with values from Facebook (all the profile. stuff)
+            if (!user) {
+                user = new Membership({
+                    provider: profile.provider,
+                    providerUserId: profile.id,
+                    accessToken: accessToken,
+                    displayname: profile.displayName,
+                    email: profile.emails[0].value,
+                    firstname: profile.name.givenName,
+                    lastname: profile.name.familyName
+                });
+                user.save(function(err) {
+                    if (err) console.log(err);
+                    return done(err, user);
+                });
+            } else {
+                //found user. Return
+                return done(err, user);
+            }
         });
     }
 ));
@@ -181,8 +168,31 @@ passport.use(new FacebookStrategy({
         callbackURL: "http://rmbadminton.herokuapp.com/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-        User.findOrCreate({ username: profile.displayName, email: profile.emails.value, firstname: profile.name.givenName, lastname: profile.name.familyName }, function (err, user) {
-            return done(err, user);
+        Membership.findOne({
+            "providerUserId": profile.id
+        }, function(err, user) {
+            if (err) {
+                return done(err);
+            }
+            //No user was found... so create a new user with values from Facebook (all the profile. stuff)
+            if (!user) {
+                user = new Membership({
+                    provider: profile.provider,
+                    providerUserId: profile.id,
+                    accessToken: accessToken,
+                    displayname: profile.displayName,
+                    email: profile.emails[0].value,
+                    firstname: profile.name.givenName,
+                    lastname: profile.name.familyName
+                });
+                user.save(function(err) {
+                    if (err) console.log(err);
+                    return done(err, user);
+                });
+            } else {
+                //found user. Return
+                return done(err, user);
+            }
         });
     }
 ));
@@ -193,8 +203,31 @@ passport.use(new TwitterStrategy({
         callbackURL: "http://rmbadminton.herokuapp.com/auth/twitter/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-        User.findOrCreate({ username: profile.displayName, email: profile.emails.value, firstname: profile.name.givenName, lastname: profile.name.familyName }, function (err, user) {
-            return done(err, user);
+        Membership.findOne({
+            "providerUserId": profile.id
+        }, function(err, user) {
+            if (err) {
+                return done(err);
+            }
+            //No user was found... so create a new user with values from Facebook (all the profile. stuff)
+            if (!user) {
+                user = new Membership({
+                    provider: profile.provider,
+                    providerUserId: profile.id,
+                    accessToken: accessToken,
+                    displayname: profile.displayName,
+                    email: profile.emails[0].value,
+                    firstname: profile.name.givenName,
+                    lastname: profile.name.familyName
+                });
+                user.save(function(err) {
+                    if (err) console.log(err);
+                    return done(err, user);
+                });
+            } else {
+                //found user. Return
+                return done(err, user);
+            }
         });
     }
 ));
@@ -298,6 +331,13 @@ app.get('/logout', function(req, res){
     res.redirect('/');
     req.session.notice = "You have successfully been logged out " + name + "!";
 });
+
+/* uncomment to check if something is authenticated before showing site content
+var isAuthenticated = function (req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    res.redirect('/');
+}*/
 
 //PORT
 
