@@ -48,7 +48,6 @@
 					{{#if user}}
                     <p class="navbar-text">
                     <strong>Hi,</strong>
-                    <img src="{{user.avatar}}" width="20" height="20">
                     {{user.username}}
                     </p>
                     </li>
@@ -91,42 +90,42 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Sign In</h4>
 					</div>
 					<div class="modal-body">
 					<div class="mainbox">
                       <h1 style="text-align:center;">Sign in</h1>
-                      <p style="text-align:center;">Please sign in with either Google, Twitter, Facebook, or a local account.</p>
+                      <p style="text-align:center;margin-bottom: 25px">Please sign in with either Google, Twitter, Facebook, or a local account.</p>
                       &nbsp;
                       <div style="text-align:center;" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                       <form id="local-sign-in" class="form-horizontal ng-valid ng-dirty ng-valid-parse" action="/login" method="post">
-                          <div class="input-group">
+                          <div style="margin-bottom: 25px" class="input-group">
                               <span class="input-group-addon">
                                            <i class="glyphicon glyphicon-user">
                                           </i>
                                       </span>
                               <input type="text" name="username" class="form-control ng-pristine ng-valid ng-empty ng-touched"/>
                           </div>
-                          <div class="input-group">
+                          <div style="margin-bottom: 25px" class="input-group">
                               <span class="input-group-addon">
                                            <i class="glyphicon glyphicon-lock">
                                           </i>
                                       </span>
                               <input type="password" name="password" class="form-control ng-pristine ng-valid ng-empty ng-touched"/>
                           </div>
-                          &nbsp;
-                          <div style="text-align:left">
+                          <div style="text-align:center">
                               <input type="submit" class="btn btn-success" value="Log In"/>
                           </div>
                         </form>
                         &nbsp;
                         </div>
-                      <p>
+                        &nbsp;&nbsp;
+                      <p style="text-align:center;margin-top: 125px">
                       &nbsp;
-                        <div style="text-align:center;"><a href="/auth/twitter" class="btn btn-info btn-lg" role="button"><span class="glyphicon glyphicon-user"></span> Log in with Twitter</a></div>
-                        &nbsp;
-                        <div style="text-align:center;"><a href="/auth/google" class="btn btn-danger btn-lg" role="button"><span class="glyphicon glyphicon-user"></span> Log in with Google</a></div>&nbsp;
-                        <div style="text-align:center;"><a href="/auth/facebook" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-user"></span> Log in with Facebook</a></div>&nbsp;
+                        <div style="text-align:center;margin-bottom: 25px">
+                        <div style="text-align:center;display:inline-block;"><a href="/auth/twitter" class="btn btn-info btn-lg" role="button"><span class="fa fa-fw fa-twitter"></span></a></div>
+                        <div style="text-align:center;display:inline-block;"><a href="/auth/google" class="btn btn-danger btn-lg" role="button"><span class="fa fa-fw fa-google"></span></a></div>
+                        <div style="text-align:center;display:inline-block;"><a href="/auth/facebook" class="btn btn-primary btn-lg" role="button"><span class="fa fa-fw fa-facebook"></span></a></div>
+                        </div>
                         <div style="text-align:center;"><a href="/signup"> or Sign Up</a></div>
                       </p>
                     </div>

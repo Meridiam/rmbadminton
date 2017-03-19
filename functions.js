@@ -7,7 +7,7 @@ var mongodbUrl = 'mongodb://' + config.mongodbHost;// + ':27017/users';
 var MongoClient = require('mongodb').MongoClient;
 
 //used in local-signup strategy
-exports.localReg = function (username, password) {
+exports.localReg = function (username, password, firstname, lastname) {
     var deferred = Q.defer();
 
     MongoClient.connect(mongodbUrl, function (err, db) {
@@ -25,6 +25,8 @@ exports.localReg = function (username, password) {
                     var user = {
                         "username": username,
                         "password": hash,
+                        "firstname": firstname,
+                        "lastname": lastname,
                         "avatar": "http://placepuppy.it/images/homepage/Beagle_puppy_6_weeks.JPG"
                     }
 

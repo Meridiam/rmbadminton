@@ -60,12 +60,12 @@ passport.use('local-signin', new LocalStrategy(
 // Use the LocalStrategy within Passport to register/"signup" users.
 passport.use('local-signup', new LocalStrategy(
     {passReqToCallback : true}, //allows us to pass back the request to the callback
-    function(req, username, password, done) {
-        funct.localReg(username, password)
+    function(req, username, password, firstname, lastname, done) {
+        funct.localReg(username, password, firstname, lastname)
             .then(function (user) {
                 if (user) {
                     console.log("REGISTERED: " + user.username);
-                    req.session.success = 'You are successfully registered and logged in ' + user.username + '!';
+                    req.session.success = 'You are successfully registered and logged in ' + user.username + user.firstname + user.lastname + '!';
                     done(null, user);
                 }
                 if (!user) {
