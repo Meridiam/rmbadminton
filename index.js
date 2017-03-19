@@ -130,7 +130,7 @@ var createHash = function(password){
 passport.use(new GoogleStrategy({
         clientID: "114380784743-am5ep4etkkdm6hoa0g1cjvnodpkk0p6m.apps.googleusercontent.com",
         clientSecret: "Hh0eq0U_ye5ZGsaYR_BI7uqp",
-        callbackURL: "http://rmbadminton.herokuapp.com/auth/google/callback"
+        callbackURL: "http://localhost:3000/auth/google/callback"
     },
     function(accessToken, refreshToken, profile, done) {
         Membership.findOne({
@@ -146,7 +146,7 @@ passport.use(new GoogleStrategy({
                     providerUserId: profile.id,
                     accessToken: accessToken,
                     displayname: profile.displayName,
-                    email: profile.emails[0].value,
+                    //email: profile.emails[0].value,
                     firstname: profile.name.givenName,
                     lastname: profile.name.familyName
                 });
@@ -181,7 +181,7 @@ passport.use(new FacebookStrategy({
                     providerUserId: profile.id,
                     accessToken: accessToken,
                     displayname: profile.displayName,
-                    email: profile.emails[0].value,
+                    //email: profile.emails[0].value,
                     firstname: profile.name.givenName,
                     lastname: profile.name.familyName
                 });
@@ -216,7 +216,7 @@ passport.use(new TwitterStrategy({
                     providerUserId: profile.id,
                     accessToken: accessToken,
                     displayname: profile.displayName,
-                    email: profile.emails[0].value,
+                    //email: profile.emails[0].value,
                     firstname: profile.name.givenName,
                     lastname: profile.name.familyName
                 });
