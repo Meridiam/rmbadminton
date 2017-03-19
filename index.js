@@ -121,7 +121,7 @@ passport.use('local-signup', new LocalStrategy({
     })
 );
 
-var findOrCreate = function(username, password){
+var findOrCreate = function(){
     // find a user in Mongo with provided username
     User.findOne({ 'username' :  username }, function(err, user) {
         // In case of any error, return using the done method
@@ -169,7 +169,7 @@ passport.use(new GoogleStrategy({
         callbackURL: "http://rmbadminton.herokuapp.com/auth/google/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-        User.findOrCreateUser({ username: profile.displayName, email: profile.emails.value, firstname: profile.name.givenName, lastname: profile.name.familyName }, function (err, user) {
+        User.findOrCreate({ username: profile.displayName, email: profile.emails.value, firstname: profile.name.givenName, lastname: profile.name.familyName }, function (err, user) {
             return done(err, user);
         });
     }
@@ -188,8 +188,8 @@ passport.use(new FacebookStrategy({
 ));
 
 passport.use(new TwitterStrategy({
-        clientID: "vUVM9VMcLuRuZw63rKX22RgtB",
-        clientSecret: "UBsjVRnHqTtsuUoCsU41pJixBu9mLD3LxaTQeyCzVIFcTEMJw5",
+        consumerKey: "vUVM9VMcLuRuZw63rKX22RgtB",
+        consumerSecret: "UBsjVRnHqTtsuUoCsU41pJixBu9mLD3LxaTQeyCzVIFcTEMJw5",
         callbackURL: "http://rmbadminton.herokuapp.com/auth/twitter/callback"
     },
     function(accessToken, refreshToken, profile, done) {
