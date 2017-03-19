@@ -157,12 +157,12 @@ app.use(express.static('assets'));
 
 //displays our homepage
 app.get('/', function(req, res){
-    res.render('signin', {user: req.user});
+    res.render('home', {user: req.user});
 });
 
 //displays our signup page
-app.get('/signin', function(req, res){
-    res.render('signin');
+app.get('/signup', function(req, res){
+    res.render('signup');
 });
 
 app.get('/SUCC', function(req, res){
@@ -172,7 +172,7 @@ app.get('/SUCC', function(req, res){
 //sends the request through our local signup strategy, and if successful takes user to homepage, otherwise returns then to signin page
 app.post('/local-reg', passport.authenticate('local-signup', {
         successRedirect: '/',
-        failureRedirect: '/signin'
+        failureRedirect: '/signup'
     })
 );
 
@@ -193,7 +193,7 @@ app.get('/auth/google/callback',
 //sends the request through our local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page
 app.post('/login', passport.authenticate('local-signin', {
         successRedirect: '/',
-        failureRedirect: '/signin'
+        failureRedirect: '/signup'
     })
 );
 
