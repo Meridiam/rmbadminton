@@ -131,7 +131,7 @@ app.post('/local-reg', passport.authenticate('local-signup', {
 );
 
 app.get('/auth/google',
-    passport.authenticate('google', { scope: 'https://www.google.com/m8/feeds' }),
+    passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }),
     function(req, res){
         // The request will be redirected to Google for authentication, so
         // this function will not be called.
