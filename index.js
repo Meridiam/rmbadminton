@@ -88,7 +88,7 @@ var user = {
 passport.use(new GoogleStrategy({
         clientID: "114380784743-am5ep4etkkdm6hoa0g1cjvnodpkk0p6m.apps.googleusercontent.com",
         clientSecret: "Hh0eq0U_ye5ZGsaYR_BI7uqp",
-        callbackURL: "http://localhost:3000/auth/google/callback"
+        callbackURL: "http://rmbadminton.herokuapp.com/auth/google/callback"
     },
     function(accessToken, refreshToken, profile, done) {
         User.findOrCreate({ googleId: profile.id }, function (err, user) {
