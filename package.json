@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jere407407/ppaw#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
@@ -25,7 +26,7 @@
     "express-useragent": "^1.0.3",
     "jquery": "^3.1.0",
     "method-override": "^2.3.7",
-    "mongodb": "^2.2.10",
+    "mongodb": "^2.2.25",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
     "passport-google": "^0.3.0",

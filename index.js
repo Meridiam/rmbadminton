@@ -13,8 +13,8 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var FacebookStrategy = require('passport-facebook');
 
 //We will be creating these two files shortly
-// var config = require('./config.js'), //config file contains all tokens and other private info
-//    funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
+var config = require('./config.js'), //config file contains all tokens and other private info
+    funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
 
 var http = require('http');
 
@@ -22,34 +22,80 @@ var useragent = require('express-useragent')
 app.use(useragent.express());
 
 
-//PASSPORT
+//===============PASSPORT=================
 
-passport.use(new GoogleStrategy({
+// Passport session setup.
+passport.serializeUser(function(user, done) {
+    console.log("serializing " + user.username);
+    done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+    console.log("deserializing " + obj);
+    done(null, obj);
+});
+
+// Use the LocalStrategy within Passport to login/"signin" users.
+passport.use('local-signin', new LocalStrategy(
+    {passReqToCallback : true}, //allows us to pass back the request to the callback
+    function(req, username, password, done) {
+        funct.localAuth(username, password)
+            .then(function (user) {
+                if (user) {
+                    console.log("LOGGED IN AS: " + user.username);
+                    req.session.success = 'You are successfully logged in ' + user.username + '!';
+                    done(null, user);
+                }
+                if (!user) {
+                    console.log("COULD NOT LOG IN");
+                    req.session.error = 'Could not log user in. Please try again.'; //inform user could not log them in
+                    done(null, user);
+                }
+            })
+            .fail(function (err){
+                console.log(err.body);
+            });
+    }
+));
+// Use the LocalStrategy within Passport to register/"signup" users.
+passport.use('local-signup', new LocalStrategy(
+    {passReqToCallback : true}, //allows us to pass back the request to the callback
+    function(req, username, password, done) {
+        funct.localReg(username, password)
+            .then(function (user) {
+                if (user) {
+                    console.log("REGISTERED: " + user.username);
+                    req.session.success = 'You are successfully registered and logged in ' + user.username + '!';
+                    done(null, user);
+                }
+                if (!user) {
+                    console.log("COULD NOT REGISTER");
+                    req.session.error = 'That username is already in use, please try a different one.'; //inform user could not log them in
+                    done(null, user);
+                }
+            })
+            .fail(function (err){
+                console.log(err.body);
+            });
+    }
+));
+
+var user = {
+    "username": [],
+    "password": []
+}
+
+/*passport.use(new GoogleStrategy({
         clientID: "114380784743-am5ep4etkkdm6hoa0g1cjvnodpkk0p6m.apps.googleusercontent.com",
         clientSecret: "Hh0eq0U_ye5ZGsaYR_BI7uqp",
-        callbackURL: "/auth/google/callback"
+        callbackURL: "http://localhost:3000/auth/google/callback"
     },
     function(accessToken, refreshToken, profile, done) {
         User.findOrCreate({ googleId: profile.id }, function (err, user) {
             return done(err, user);
         });
     }
-));
-
-//POSTGRESQL
-/*var pg = require('pg');
-pg.defaults.ssl = true;
-
-pg.connect(process.env.DATABASE_URL, function(err, client) {
-  if (err) throw err;
-  console.log('Connected to postgres! Getting schemas...');
-
-  client
-    .query('SELECT table_schema,table_name FROM information_schema.tables;')
-    .on('row', function(row) {
-      console.log(JSON.stringify(row));
-    });
-});*/
+));*/
 
 
 //EXPRESS
