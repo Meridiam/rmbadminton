@@ -99,6 +99,7 @@
                     <div class="list-group">
                         {{#each personals}}
                             <a href="/event/{{this._id}}" class="list-group-item list-group-item-action"><h2>{{this.name}}</h2> <p>{{this.date}}</p></a>
+                            <a href="/rmevent/{{this._id}}" style="margin-bottom:25px" class="btn btn-danger">Delete</a>
                         {{/each}}
                     </div>
                 </div>
@@ -112,6 +113,7 @@
         		    <p>Username: {{user.username}}</p>
         		    <p>Email: {{user.email}}</p>
         		    <p>Joined: {{user.dateAdded}}</p>
+        		    <a href="/">Back</a>
         		 </div>
             </div>
         </div>

@@ -318,7 +318,7 @@ app.get('/addevent/:id', function(req, res){
                 .exec(function(error, user) {
                     console.log(JSON.stringify(user, null, "\t"));
                 });
-            res.redirect('/');
+            res.redirect('/members');
         }
         /*
         function(err, event) {
@@ -330,6 +330,35 @@ app.get('/addevent/:id', function(req, res){
                 event: event
             })
         }*/
+    );
+});
+
+app.get('/rmevent/:id', function(req, res){
+    User.findByIdAndUpdate(
+        req.user,
+        {$pull: {'events': req.params.id}},
+        {safe: true, upsert: true, new : true},
+        function(err, user) {
+            if(err) {
+                console.log(err);
+                return done(err);
+            }
+            User.find({})
+                .exec(function(error, user) {
+                    console.log(JSON.stringify(user, null, "\t"));
+                });
+            res.redirect('/members');
+        }
+        /*
+         function(err, event) {
+         // In case of any error, return using the done method
+         if (err) {
+         return done(err);
+         }
+         res.render('event', {
+         event: event
+         })
+         }*/
     );
 });
 
