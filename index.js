@@ -157,7 +157,7 @@ app.set('view engine', 'handlebars');
 //===============ROUTES=================
 //displays homepage
 app.get('/', function(req, res){
-    Post.find({}).sort('-created_at').exec(function ( err, posts ){
+    Post.find({}).sort('-created_at').populate('author').exec(function ( err, posts ){
         Event.find({
             happens: {
                 $gte: new Date()
@@ -207,21 +207,23 @@ app.get('/logout', function(req, res){
 app.get('/members', function(req, res){
     User.find()
         .sort({ lowerLast: 1 })
-        .exec( function ( err, users ){
-        Event.find( function (err, events){
-            User.findOne({'_id': req.user._id})
-                .populate('events')
-                .exec(function (err, user){
-                res.render( 'members', {
-                    user: req.user,
-                    members: users,
-                    events: events,
-                    personals: user.events
-                });
+        .exec(function ( err, users ) {
+            Event.find()
+                .sort('-happens')
+                .exec(function (err, events){
+                User.findOne({'_id': req.user._id})
+                    .populate('events')
+                    .exec(function (err, user) {
+                        res.render('members', {
+                            user: req.user,
+                            members: users,
+                            events: events,
+                            personals: user.events
+                        });
+                    });
+                console.log(JSON.stringify(users, null, "\t"));
             });
-            console.log(JSON.stringify(user, null, "\t"));
         });
-    });
 });
 
 app.post('/newpost', function(req, res){
@@ -240,7 +242,7 @@ app.post('/newpost', function(req, res){
             throw err;
         }
         if (!err) {
-            Post.find({})
+            Post.find()
                 .populate('author')
                 .exec(function(error, posts) {
                     console.log(JSON.stringify(posts, null, "\t"))
