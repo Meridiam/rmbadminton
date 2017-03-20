@@ -92,6 +92,7 @@ passport.use('local-signup', new LocalStrategy({
                     newUser.email = req.param('email');
                     newUser.firstname = req.param('firstname');
                     newUser.lastname = req.param('lastname');
+                    newUser.lowerLast = req.param('lastname').toLowerCase();
 
                     // save the user
                     newUser.save(function(err) {
@@ -156,12 +157,14 @@ app.set('view engine', 'handlebars');
 //===============ROUTES=================
 //displays homepage
 app.get('/', function(req, res){
-    Post.find({}).sort('-date').exec(function ( err, posts ){
+    Post.find({}).sort('-created_at').exec(function ( err, posts ){
         Event.find({
             happens: {
                 $gte: new Date()
             }
-        }, function (err, events){
+        })
+            .sort('happens')
+            .exec(function (err, events){
             res.render( 'home', {
                 user: req.user,
                 news: posts,
@@ -202,13 +205,21 @@ app.get('/logout', function(req, res){
 });
 
 app.get('/members', function(req, res){
-    User.find( function ( err, users ){
+    User.find()
+        .sort({ lowerLast: 1 })
+        .exec( function ( err, users ){
         Event.find( function (err, events){
-            res.render( 'members', {
-                user: req.user,
-                members: users,
-                events: events
+            User.findOne({'_id': req.user._id})
+                .populate('events')
+                .exec(function (err, user){
+                res.render( 'members', {
+                    user: req.user,
+                    members: users,
+                    events: events,
+                    personals: user.events
+                });
             });
+            console.log(JSON.stringify(user, null, "\t"));
         });
     });
 });
@@ -233,7 +244,7 @@ app.post('/newpost', function(req, res){
                 .populate('author')
                 .exec(function(error, posts) {
                     console.log(JSON.stringify(posts, null, "\t"))
-                })
+                });
             res.redirect('/');
         }
     });
@@ -255,7 +266,7 @@ app.post('/newevent', function(req, res){
     // save the user
     newEvent.save(function(err) {
         if (err){
-            console.log('Error in Saving user: '+err);
+            console.log('Error in Saving user: '+ err);
             throw err;
         }
             res.redirect('/');
@@ -287,6 +298,36 @@ app.get('/event/:id', function(req, res){
                 event: event
             })
         }
+    );
+});
+
+app.get('/addevent/:id', function(req, res){
+    User.findByIdAndUpdate(
+        req.user,
+        {$push: {'events': req.params.id}},
+        {safe: true, upsert: true, new : true},
+        function(err, user) {
+            if(err) {
+                console.log(err);
+                return done(err);
+            }
+            User.find({})
+                .populate('events')
+                .exec(function(error, user) {
+                    console.log(JSON.stringify(user, null, "\t"));
+                });
+            res.redirect('/');
+        }
+        /*
+        function(err, event) {
+            // In case of any error, return using the done method
+            if (err) {
+                return done(err);
+            }
+            res.render('event', {
+                event: event
+            })
+        }*/
     );
 });
 
