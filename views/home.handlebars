@@ -38,10 +38,6 @@
 						</li>
 					</ul>
 					<form class="navbar-form navbar-left">
-						<div class="form-group">
-							<input type="text" class="form-control" placeholder="How do I...">
-						</div>
-						<button type="submit" class="btn btn-default">Search</button>
 					</form>
 					<ul class="nav navbar-nav navbar-right">
 					<li>
@@ -49,11 +45,10 @@
                     <p class="navbar-text">
                     <strong>Hi,</strong>
                     {{user.username}}
-                    <strong>First Name:</strong>
-                    {{user.firstname}}
-                    <strong>Last Name:</strong>
-                    {{user.lastname}}
                     </p>
+                    </li>
+                    <li>
+                        <a href="/members">Account</a>
                     </li>
                     <li>
                     <a href="/logout">Log Out</a>
@@ -65,8 +60,8 @@
 						<!--removing modal login window <li><a data-toggle="modal" href="#modalLogin">Login</a></li>-->
 						<!--<li><a data-toggle="modal" href="/signin">Login</a></li>-->
 						<li><a type="button" class="musico" onclick="musictoggle();">
-							<i id="musictoggle" class="fa fa-pause fa-fw mustoggle" aria-hidden="true"></i>
-							<i id="musoverlay" class="fa fa-music fa-fw musoverlay" aria-hidden="true"></i>
+							<i id="musictoggle" class="fa fa-fw fa-pause mustoggle" aria-hidden="true"></i>
+							<i id="musoverlay" class="fa fa-fw fa-music musoverlay" aria-hidden="true"></i>
 						</a></li>
 					</ul>
 				</div><!-- /.navbar-collapse -->
@@ -76,16 +71,30 @@
 		<div class="container">
 			<div class="row post">
 				<!--<div class="col-xs-6 col-centered">-->
-<!--<h3></h3>
-<p></p>-->
-					<div class="text-center"><h3>Latest Announcements</h3></div>
-					<p>Welcome to the official website for RM Badminton! This website is still under construction.
-					The latest news and events occurring in the club will be announced here, so check this site often as its design becomes more complex
-				and exciting! This website will eventually replace email announcements, and automatated emails will be sent to every member on our mailing list.
-				If you would like to offer feedback/ideas on how the website could be improved, don't hesitate to send suggestions to rmbmtn@gmail.com!</p>
+<div class="col-md-8 col-centered">
+                {{#each news}}
+    <div class="panel panel-default box" style="margin-top: 25px">
+					<div class="panel-heading"><h4>{{this.title}}</h4></div>
+					<div class="panel-body">
+					<h5>{{this.created_at}}</h5>&nbsp;
+					<p>{{this.body}}</p>
+				</div>
+				</div>
+				{{/each}}
+				</div>
+				<div class="col-md-4 col-centered">
+                <div class="panel panel-default box" style="margin-top: 25px">
+                            <div class="panel-heading" style="margin-bottom: 10px"><h4>Upcoming Events</h4></div>
+                		        <div class="panel-body">
+                                    <div class="list-group">
+                                        {{#each events}}
+                                            <a href="/event/{{this._id}}" class="list-group-item list-group-item-action"><h2>{{this.name}}</h2> <p>{{this.date}}</p></a>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 				<!--</div>-->
-			</div>
-		</div>
 		<!--Modal content goes between content and footer-->
 		<div id="modalLogin" class="modal fade" role="dialog">
 			<div class="modal-dialog">
@@ -97,23 +106,26 @@
 					</div>
 					<div class="modal-body">
 					<div class="mainbox">
+					{{#if message}}
+                        <div class="alert alert-danger">{{message}}</div>
+                    {{/if}}
                       <h1 style="text-align:center;margin-bottom: 25px">Sign in</h1>
                       &nbsp;
                       <div style="text-align:center;" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-                      <form id="local-sign-in" class="form-signin ng-valid ng-dirty ng-valid-parse" action="/login" method="post">
+                      <form id="local-sign-in" class="form-signin" action="/login" method="post">
                           <div style="margin-bottom: 25px" class="input-group">
                               <span class="input-group-addon">
                                            <i class="glyphicon glyphicon-user">
                                           </i>
                                       </span>
-                              <input type="text" name="username" class="form-control ng-pristine ng-valid ng-empty ng-touched"/>
+                              <input type="text" name="username" class="form-control" placeholder="Username" autofocus/>
                           </div>
                           <div style="margin-bottom: 25px" class="input-group">
                               <span class="input-group-addon">
                                            <i class="glyphicon glyphicon-lock">
                                           </i>
                                       </span>
-                              <input type="password" name="password" class="form-control ng-pristine ng-valid ng-empty ng-touched"/>
+                              <input type="password" name="password" class="form-control" placeholder="Password"/>
                           </div>
                           <div style="text-align:center">
                               <input type="submit" class="btn btn-success" value="Log In"/>
@@ -121,9 +133,8 @@
                         </form>
                         &nbsp;
                         </div>
-                        &nbsp;&nbsp;
-                      <p style="text-align:center;margin-top: 125px">
-                      &nbsp;
+                        &nbsp;
+                      <p style="text-align:center;margin-top: 155px">
                         <div style="text-align:center;margin-bottom: 25px">
                        <!-- <div style="text-align:center;display:inline-block;"><a href="/auth/twitter" class="btn btn-info btn-lg" role="button"><span class="fa fa-fw fa-twitter"></span></a></div>
                         <div style="text-align:center;display:inline-block;"><a href="/auth/google" class="btn btn-danger btn-lg" role="button"><span class="fa fa-fw fa-google"></span></a></div>

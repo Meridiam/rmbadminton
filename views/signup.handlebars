@@ -1,24 +1,26 @@
+{{#if message}}
+    <div class="alert alert-danger" style="text-align:center">{{message}}</div>
+{{/if}}
 <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-
 <div class="panel panel-info">
 					<div class="panel-heading">
 					<div class="panel-title">Sign Up</div>
 					</div>
 					<div style="padding-top:30px" class="panel-body">
-					<form id="local-reg" class="form-horizontal ng-valid ng-dirty ng-valid-parse" action="/local-reg" method="post">
+					<form id="local-reg" class="form-horizontal" action="/local-reg" method="post">
                         <div style="margin-bottom: 25px" class="input-group">
                             <span class="input-group-addon">
                                  <i class="glyphicon glyphicon-user">
                                 </i>
                             </span>
-                            <input type="text" name="username" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="Username" autofocus/>
+                            <input type="text" name="username" class="form-control" placeholder="Username*" autofocus/>
                         </div>
                         <div style="margin-bottom: 25px" class="input-group">
                             <span class="input-group-addon">
                                          <i class="glyphicon glyphicon-lock">
                                         </i>
                                     </span>
-                            <input type="password" name="password" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="Password" required/>
+                            <input type="password" name="password" class="form-control" placeholder="Password*" required/>
                         </div>
                         <div style="margin-bottom: 25px" class="input-group">
 
@@ -26,8 +28,8 @@
                                                             <i class="fa fa-envelope" style="width: 14px">
                                                             </i>
                                                         </span>
-                                                    <input type="email" name="email" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="Email" required/>
-                                                </div>
+                                                    <input type="email" name="email" class="form-control" placeholder="Email*" required/>
+                                                    </div>
                         <div style="margin-bottom: 25px" class="input-group">
 
                                 <span class="input-group-addon">
@@ -35,7 +37,7 @@
                                     </i>
                                 </span>
 
-                            <input type="text" name="firstname" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="First Name" required/>
+                            <input type="text" name="firstname" class="form-control" placeholder="First Name*" required/>
                         </div>
                         <div style="margin-bottom: 25px" class="input-group">
 
@@ -44,9 +46,8 @@
                                     </i>
                                 </span>
 
-                        <input type="text" name="lastname" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="Last Name" required/>
+                        <input type="text" name="lastname" class="form-control" placeholder="Last Name*" required/>
                         </div>
-                        &nbsp;
                         <div>
                             <input type="submit" class="btn btn-success" value="Register"/>
                         </div>

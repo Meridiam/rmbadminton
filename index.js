@@ -5,7 +5,8 @@ var express = require('express'),
     session = require('express-session'),
     passport = require('passport'),
     LocalStrategy = require('passport-local'),
-    bCrypt = require('bcryptjs');
+    bCrypt = require('bcryptjs'),
+    flash = require('connect-flash');
 
 //We will be creating these two files shortly
 // var config = require('./config.js'), //config file contains all tokens and other private info
@@ -16,6 +17,8 @@ var dbConfig = require('./db.js');
 var mongoose = require('mongoose');
 mongoose.connect(dbConfig.url);
 var User = require('./models/user.js');
+var Post = require('./models/post.js');
+var Event = require('./models/event.js');
 
 //===============PASSPORT===============
 
@@ -116,6 +119,7 @@ var createHash = function(password){
 //===============EXPRESS================
 // Configure Express
 app.use(cookieParser());
+app.use(flash());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({secret: 'supernova', saveUninitialized: true, resave: true}));
@@ -152,25 +156,39 @@ app.set('view engine', 'handlebars');
 //===============ROUTES=================
 //displays homepage
 app.get('/', function(req, res){
-    res.render('home', {user: req.user});
+    Post.find({}).sort('-date').exec(function ( err, posts ){
+        Event.find({
+            happens: {
+                $gte: new Date()
+            }
+        }, function (err, events){
+            res.render( 'home', {
+                user: req.user,
+                news: posts,
+                events: events,
+                message: req.flash('message')
+            });
+        });
+    });
 });
 
 //displays signup page
 app.get('/signup', function(req, res){
-    res.render('signup');
+
+    res.render('signup', { message: req.flash('message')});
 });
 
 //sends the request through local signup strategy, and if successful takes user to homepage, otherwise returns then to signin page
 app.post('/local-reg', passport.authenticate('local-signup', {
         successRedirect: '/',
-        failureRedirect: '/signin'
+        failureRedirect: '/signup'
     })
 );
 
 //sends the request through local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page
 app.post('/login', passport.authenticate('local-signin', {
         successRedirect: '/',
-        failureRedirect: '/signin'
+        failureRedirect: '/'
     })
 );
 
@@ -182,6 +200,105 @@ app.get('/logout', function(req, res){
     res.redirect('/');
     req.session.notice = "You have successfully been logged out " + name + "!";
 });
+
+app.get('/members', function(req, res){
+    User.find( function ( err, users ){
+        Event.find( function (err, events){
+            res.render( 'members', {
+                user: req.user,
+                members: users,
+                events: events
+            });
+        });
+    });
+});
+
+app.post('/newpost', function(req, res){
+    var title = req.body.title;
+    var text = req.body.info;
+
+    var newPost = new Post();
+    newPost.title = title;
+    newPost.body = text;
+    newPost.author = req.user._id;
+
+    // save the user
+    newPost.save(function(err) {
+        if (err){
+            console.log('Error in Saving user: '+err);
+            throw err;
+        }
+        if (!err) {
+            Post.find({})
+                .populate('author')
+                .exec(function(error, posts) {
+                    console.log(JSON.stringify(posts, null, "\t"))
+                })
+            res.redirect('/');
+        }
+    });
+});
+
+app.post('/newevent', function(req, res){
+    var title = req.body.name;
+    var text = req.body.desc;
+    var date = req.body.date;
+    var duration = req.body.dur;
+
+    var newEvent = new Event();
+    newEvent.name = title;
+    newEvent.desc = text;
+    newEvent.date = date;
+    newEvent.happens = new Date(date);
+    newEvent.duration = duration;
+
+    // save the user
+    newEvent.save(function(err) {
+        if (err){
+            console.log('Error in Saving user: '+err);
+            throw err;
+        }
+            res.redirect('/');
+    });
+});
+
+app.get('/member/:id', isAdmin, function(req, res){
+    User.findOne({ '_id' :  req.params.id },
+        function(err, user) {
+            // In case of any error, return using the done method
+            if (err) {
+                return done(err);
+            }
+            res.render('member', {
+                user: user
+            })
+        }
+    );
+});
+
+app.get('/event/:id', function(req, res){
+    Event.findOne({ '_id' :  req.params.id },
+        function(err, event) {
+            // In case of any error, return using the done method
+            if (err) {
+                return done(err);
+            }
+            res.render('event', {
+                event: event
+            })
+        }
+    );
+});
+
+function isAdmin(req, res, next){
+    if(req.isAuthenticated() && req.user.admin){
+        console.log('cool you are an admin, carry on your way');
+        next();
+    } else {
+        console.log('You are not an admin');
+        res.redirect('/signup');
+    }
+}
 
 //===============PORT=================
 var port = process.env.PORT || 3000; //select your port or let it pull from your .env file

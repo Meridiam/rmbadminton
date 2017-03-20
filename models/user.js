@@ -6,5 +6,7 @@ module.exports = mongoose.model('User',{
     email: String,
     firstname: String,
     lastname: String,
-    dateAdded: {type: Date, required: true, default: Date.now}
+    events: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
+    dateAdded: {type: Date, required: true, default: Date.now},
+    admin: {type: Boolean, required: true, default: false}
 });
