@@ -9,7 +9,7 @@ var express = require('express'),
     flash = require('connect-flash'),
     showdown  = require('showdown'),
     converter = new showdown.Converter(),
-    remarkable = require('remarkable'),
+    Remarkable = require('remarkable'),
     md = new Remarkable();
 
 //We will be creating these two files shortly
@@ -231,6 +231,7 @@ app.get('/members', isRegistered, function(req, res){
 
 app.post('/newpost', function(req, res){
     var title = req.body.title,
+        //html = converter.makeHtml(req.body.info);
         html = md.render(req.body.info);
 
     var newPost = new Post();
