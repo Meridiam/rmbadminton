@@ -452,7 +452,7 @@ function isAdmin(req, res, next){
         next();
     } else {
         console.log('You are not an admin');
-        res.redirect('/signup');
+        res.send('You are not an administrator');
     }
 }
 
