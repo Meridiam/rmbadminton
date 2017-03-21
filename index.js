@@ -394,6 +394,12 @@ app.post('/resetpwd/:id', isRegistered, function(req, res){
         });
 });
 
+app.get('/resetpass', isRegistered, function(req, res){
+    res.render('resetpwd', {
+        'user': req.user
+    })
+});
+
 
 function isRegistered(req, res, next){
     if(req.isAuthenticated()){
