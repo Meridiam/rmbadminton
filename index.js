@@ -8,7 +8,9 @@ var express = require('express'),
     bCrypt = require('bcryptjs'),
     flash = require('connect-flash'),
     showdown  = require('showdown'),
-    converter = new showdown.Converter();
+    converter = new showdown.Converter(),
+    remarkable = require('remarkable'),
+    md = new Remarkable();
 
 //We will be creating these two files shortly
 // var config = require('./config.js'), //config file contains all tokens and other private info
@@ -229,7 +231,7 @@ app.get('/members', isRegistered, function(req, res){
 
 app.post('/newpost', function(req, res){
     var title = req.body.title,
-        html = converter.makeHtml(req.body.info);
+        html = md.render(req.body.info);
 
     var newPost = new Post();
     newPost.title = title;
