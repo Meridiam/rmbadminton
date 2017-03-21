@@ -177,7 +177,6 @@ app.get('/', function(req, res){
 
 //displays signup page
 app.get('/signup', function(req, res){
-
     res.render('signup', { message: req.flash('message')});
 });
 
@@ -196,7 +195,7 @@ app.post('/login', passport.authenticate('local-signin', {
 );
 
 //logs user out of site, deleting them from the session, and returns to homepage
-app.get('/logout', function(req, res){
+app.get('/logout', isRegistered, function(req, res){
     var name = req.user.username;
     console.log("LOGGING OUT " + req.user.username);
     req.logout();
@@ -204,7 +203,7 @@ app.get('/logout', function(req, res){
     req.session.notice = "You have successfully been logged out " + name + "!";
 });
 
-app.get('/members', function(req, res){
+app.get('/members', isRegistered, function(req, res){
     User.find()
         .sort({ lowerLast: 1 })
         .exec(function ( err, users ) {
@@ -289,21 +288,45 @@ app.get('/member/:id', isAdmin, function(req, res){
     );
 });
 
-app.get('/event/:id', function(req, res){
+app.get('/event/:id', isRegistered, function(req, res){
     Event.findOne({ '_id' :  req.params.id },
         function(err, event) {
             // In case of any error, return using the done method
             if (err) {
                 return done(err);
             }
-            res.render('event', {
-                event: event
-            })
+            if (req.user.events.indexOf(req.params.id) > -1) {
+                console.log('This event is in your events');
+                if (req.user.admin) {
+                    res.render('event', {
+                        event: event,
+                        admin: true
+                    })
+                } else {
+                    res.render('event', {
+                        event: event
+                    })
+                }
+            } else {
+                console.log('This event is not your events');
+                if (req.user.admin) {
+                    res.render('event', {
+                        event: event,
+                        admin: true,
+                        inevents: 'no'
+                    })
+                } else {
+                    res.render('event', {
+                        event: event,
+                        inevents: 'no'
+                    })
+                }
+            }
         }
     );
 });
 
-app.get('/addevent/:id', function(req, res){
+app.get('/addevent/:id', isAdmin, function(req, res){
     User.findByIdAndUpdate(
         req.user,
         {$push: {'events': req.params.id}},
@@ -349,18 +372,29 @@ app.get('/rmevent/:id', function(req, res){
                 });
             res.redirect('/members');
         }
-        /*
-         function(err, event) {
-         // In case of any error, return using the done method
-         if (err) {
-         return done(err);
-         }
-         res.render('event', {
-         event: event
-         })
-         }*/
     );
 });
+
+app.get('/delevent/:id', isAdmin, function(req, res){
+    Event.find({'_id': req.params.id})
+        .remove()
+        .exec(function (err){
+            if (err){
+                return done(err);
+            }
+            res.redirect('/members');
+        });
+});
+
+function isRegistered(req, res, next){
+    if(req.isAuthenticated()){
+        console.log('cool you are a member, carry on your way');
+        next();
+    } else {
+        console.log('You are not a member');
+        res.redirect('/signup');
+    }
+}
 
 function isAdmin(req, res, next){
     if(req.isAuthenticated() && req.user.admin){
