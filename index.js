@@ -326,7 +326,7 @@ app.get('/event/:id', isRegistered, function(req, res){
     );
 });
 
-app.get('/addevent/:id', isAdmin, function(req, res){
+app.get('/addevent/:id', function(req, res){
     User.findByIdAndUpdate(
         req.user,
         {$push: {'events': req.params.id}},
