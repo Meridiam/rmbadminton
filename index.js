@@ -328,7 +328,7 @@ app.get('/event/:id', isRegistered, function(req, res){
     );
 });
 
-app.get('/addevent/:id', function(req, res){
+app.get('/addevent/:id', isRegistered, function(req, res){
     User.findByIdAndUpdate(
         req.user,
         {$push: {'events': req.params.id}},
@@ -348,7 +348,7 @@ app.get('/addevent/:id', function(req, res){
     );
 });
 
-app.get('/rmevent/:id', function(req, res){
+app.get('/rmevent/:id', isRegistered, function(req, res){
     User.findByIdAndUpdate(
         req.user,
         {$pull: {'events': req.params.id}},
@@ -377,6 +377,23 @@ app.get('/delevent/:id', isAdmin, function(req, res){
             res.redirect('/members');
         });
 });
+
+app.post('/resetpwd/:id', isRegistered, function(req, res){
+    User.find({'_id': req.params.id})
+        .exec(function (err, user){
+            if (err){
+                return done(err);
+            }
+            if(bCrypt.compareSync(req.body.oldpass, user.password)){
+                User.update({'_id': req.params.id }, { $set:
+                    {
+                        'password': createHash(req.body.password)
+                    }
+                })
+            }
+        });
+});
+
 
 function isRegistered(req, res, next){
     if(req.isAuthenticated()){
