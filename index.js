@@ -7,8 +7,8 @@ var express = require('express'),
     LocalStrategy = require('passport-local'),
     bCrypt = require('bcryptjs'),
     flash = require('connect-flash'),
-    showdown  = require('showdown'),
-    converter = new showdown.Converter(),
+    //showdown  = require('showdown'),
+    //converter = new showdown.Converter(),
     Remarkable = require('remarkable'),
     md = new Remarkable();
 
