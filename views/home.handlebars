@@ -35,8 +35,6 @@
 							</ul>
 						</li>
 					</ul>
-					<form class="navbar-form navbar-left">
-					</form>
 					<ul class="nav navbar-nav navbar-right">
 					<li>
 					{{#if user}}
@@ -70,6 +68,9 @@
 			<div class="row post">
 				<!--<div class="col-xs-6 col-centered">-->
 <div class="col-md-8 col-centered">
+    {{#if resetPass}}
+        <div class="alert alert-danger">{{resetPass}}</div>
+    {{/if}}
                 {{#each news}}
     <div class="panel panel-default box" style="margin-top: 25px">
 					<div class="panel-heading"><h4>{{this.title}}</h4></div>

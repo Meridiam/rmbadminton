@@ -97,7 +97,6 @@ passport.use('local-signup', new LocalStrategy({
                     newUser.firstname = req.param('firstname');
                     newUser.lastname = req.param('lastname');
                     newUser.lowerLast = req.param('lastname').toLowerCase();
-
                     // save the user
                     newUser.save(function(err) {
                         if (err){
@@ -173,7 +172,8 @@ app.get('/', function(req, res){
                 user: req.user,
                 news: posts,
                 events: events,
-                message: req.flash('message')
+                message: req.flash('message'),
+                resetPass: req.flash('resetPass')
             });
         });
     });
@@ -229,7 +229,7 @@ app.get('/members', isRegistered, function(req, res){
         });
 });
 
-app.post('/newpost', function(req, res){
+app.post('/newpost', isAdmin, function(req, res){
     var title = req.body.title,
         //html = converter.makeHtml(req.body.info);
         html = md.render(req.body.info);
@@ -256,7 +256,7 @@ app.post('/newpost', function(req, res){
     });
 });
 
-app.post('/newevent', function(req, res){
+app.post('/newevent', isAdmin, function(req, res){
     var title = req.body.name;
     var text = req.body.desc;
     var date = req.body.date;
@@ -287,7 +287,8 @@ app.get('/member/:id', isAdmin, function(req, res){
                 return done(err);
             }
             res.render('member', {
-                user: user
+                user: user,
+                admin: req.user.admin
             })
         }
     );
@@ -381,30 +382,58 @@ app.get('/delevent/:id', isAdmin, function(req, res){
         });
 });
 
-/*app.post('/resetpwd/:id', isRegistered, function(req, res){
-    req.logout();
-    User.find({'_id': req.params.id})
+app.post('/resetpwd/:id', isRegistered, function(req, res){
+    User.findOne({'_id': req.params.id})
         .exec(function (err, user){
             if (err){
                 return done(err);
             }
-            if(bCrypt.compareSync(req.body.oldpass, user.password)){
-                User.update({'_id': req.params.id }, { $set:
+            console.log('old password hash is : '+user.password);
+            if(req.user.admin){
+                User.findOneAndUpdate({'_id': req.params.id }, { $set:
                     {
-                        'password': createHash(req.body.password)
+                        password: createHash(req.body.password)
                     }
+                }, function (err, user){
+                    console.log('password has reset to: '+user.password);
+                    req.flash('resetPass', 'Successfully Changed Password');
+                    res.redirect("/");
                 });
-                console.log('password reset to: '+user.password);
+            } else {
+                if (bCrypt.compareSync(req.body.oldpass, user.password)) {
+                    User.findOneAndUpdate({'_id': req.params.id}, {
+                        $set: {
+                            password: createHash(req.body.password)
+                        }
+                    }, function (err, user) {
+                        console.log('password has reset to: ' + user.password);
+                        req.flash('resetPass', 'Successfully Changed Password');
+                        res.redirect("/");
+                    });
+                } else {
+                    req.flash('message', 'Incorrect Old Password');
+                    res.render('resetpwd', {message: req.flash('message')});
+                }
             }
-            res.redirect("/")
         });
 });
 
-app.get('/resetpass', isRegistered, function(req, res){
+app.get('/resetpass/:id', isRegistered, function(req, res){
     res.render('resetpwd', {
-        'user': req.user
+        'user': req.params.id
     })
-});*/
+});
+
+app.get('/deluser/:id', isAdmin, function(req, res){
+    User.find({'_id': req.params.id})
+        .remove()
+        .exec(function (err){
+            if (err){
+                return done(err);
+            }
+            res.redirect('/members');
+        });
+});
 
 
 function isRegistered(req, res, next){
