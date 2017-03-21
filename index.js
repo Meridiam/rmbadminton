@@ -6,7 +6,9 @@ var express = require('express'),
     passport = require('passport'),
     LocalStrategy = require('passport-local'),
     bCrypt = require('bcryptjs'),
-    flash = require('connect-flash');
+    flash = require('connect-flash'),
+    showdown  = require('showdown'),
+    converter = new showdown.Converter();
 
 //We will be creating these two files shortly
 // var config = require('./config.js'), //config file contains all tokens and other private info
@@ -226,12 +228,12 @@ app.get('/members', isRegistered, function(req, res){
 });
 
 app.post('/newpost', function(req, res){
-    var title = req.body.title;
-    var text = req.body.info;
+    var title = req.body.title,
+        html = converter.makeHtml(req.body.info);
 
     var newPost = new Post();
     newPost.title = title;
-    newPost.body = text;
+    newPost.body = html;
     newPost.author = req.user._id;
 
     // save the user
