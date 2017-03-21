@@ -229,11 +229,11 @@ app.get('/members', isRegistered, function(req, res){
 
 app.post('/newpost', function(req, res){
     var title = req.body.title,
-        text = req.body.info;
+        html = converter.makeHtml(req.body.info);
 
     var newPost = new Post();
     newPost.title = title;
-    newPost.body = text;
+    newPost.body = html;
     newPost.author = req.user._id;
 
     // save the user
