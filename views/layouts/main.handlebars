@@ -41,12 +41,12 @@
           form.username.focus();
           return false;
         }
-        /*re = /^\w+$/;
+        re = /^\w+$/;
         if(!re.test(form.username.value)) {
           alert("Error: Username must contain only letters, numbers and underscores!");
           form.username.focus();
           return false;
-        }*/
+        }
 
         if(form.password.value != "" && form.password.value == form.pwd2.value) {
           if(form.password.value.length < 6) {
@@ -83,7 +83,6 @@
           return false;
         }
 
-        alert("You entered a valid password: " + form.password.value);
         return true;
       }
 
