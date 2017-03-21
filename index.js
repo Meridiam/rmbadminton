@@ -379,6 +379,7 @@ app.get('/delevent/:id', isAdmin, function(req, res){
 });
 
 app.post('/resetpwd/:id', isRegistered, function(req, res){
+    req.logout();
     User.find({'_id': req.params.id})
         .exec(function (err, user){
             if (err){
@@ -389,8 +390,10 @@ app.post('/resetpwd/:id', isRegistered, function(req, res){
                     {
                         'password': createHash(req.body.password)
                     }
-                })
+                });
+                console.log('password reset to: '+user.password);
             }
+            res.redirect("/")
         });
 });
 
