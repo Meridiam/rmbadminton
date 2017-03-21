@@ -343,16 +343,6 @@ app.get('/addevent/:id', function(req, res){
                 });
             res.redirect('/members');
         }
-        /*
-        function(err, event) {
-            // In case of any error, return using the done method
-            if (err) {
-                return done(err);
-            }
-            res.render('event', {
-                event: event
-            })
-        }*/
     );
 });
 
