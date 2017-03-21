@@ -40,6 +40,18 @@
         </div>
     </div>
     <div class="row">
+    <div class="col-md-4 col-centered">
+            <div class="panel panel-default box" style="margin-top: 25px">
+                <div class="panel-heading" style="margin-bottom: 10px"><h4>Event List</h4></div>
+    		        <div class="panel-body">
+                        <div class="list-group">
+                            {{#each events}}
+                                <a href="/event/{{this._id}}" class="list-group-item list-group-item-action"><h2>{{this.name}}</h2><p>{{this.date}}</p></a>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         <div class=col-md-8 col-centered">
             <div class="panel panel-default box" style="margin-top: 25px">
                 <div class="panel-heading" style="margin-bottom: 10px"><h4>New Event</h4></div>
@@ -76,18 +88,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-centered">
-                        <div class="panel panel-default box" style="margin-top: 25px">
-                            <div class="panel-heading" style="margin-bottom: 10px"><h4>Event List</h4></div>
-                		        <div class="panel-body">
-                                    <div class="list-group">
-                                        {{#each events}}
-                                            <a href="/event/{{this._id}}" class="list-group-item list-group-item-action"><h2>{{this.name}}</h2><p>{{this.date}}</p></a>
-                                        {{/each}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
         </div>
         </div>
 </div>
