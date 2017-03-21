@@ -378,7 +378,7 @@ app.get('/delevent/:id', isAdmin, function(req, res){
         });
 });
 
-app.post('/resetpwd/:id', isRegistered, function(req, res){
+/*app.post('/resetpwd/:id', isRegistered, function(req, res){
     req.logout();
     User.find({'_id': req.params.id})
         .exec(function (err, user){
@@ -401,7 +401,7 @@ app.get('/resetpass', isRegistered, function(req, res){
     res.render('resetpwd', {
         'user': req.user
     })
-});
+});*/
 
 
 function isRegistered(req, res, next){
