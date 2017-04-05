@@ -19,7 +19,7 @@ var express = require('express'),
 var app = express();
 var dbConfig = require('./db.js');
 var mongoose = require('mongoose');
-mongoose.connect(dbConfig.url);
+mongoose.connect(process.env.MONGODB_URI);
 var User = require('./models/user.js');
 var Post = require('./models/post.js');
 var Event = require('./models/event.js');
