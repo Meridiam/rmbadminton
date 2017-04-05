@@ -17,7 +17,6 @@ var express = require('express'),
 //    funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
 
 var app = express();
-var dbConfig = require('./db.js');
 var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI);
 var User = require('./models/user.js');
