@@ -1,99 +1,106 @@
 <!-- views/home.handlebars -->
 <div class="jumbotron text-center" style="margin-bottom:0;background-color:#07151D">
-			<video src="/vid/loop.mp4" width=25% height=25% autoplay loop style="margin-top:0px;width:960px;margin-left:auto;margin-right:auto">
-                Your browser does not support the video tag.
-            </video>
-			<!--<img src="loop.gif" alt="Logo"> Mobile Only-->
-		</div>
-		<audio id="audio" loop>
-			<source src="/audio/bg.mp3" type="audio/mpeg">
-            Your browser does not support the audio tag.
-		</audio>
-		<nav class="navbar navbar-default" style="margin-bottom:0">
-			<div class="container-fluid">
-				<!-- Brand and toggle get grouped for better mobile display -->
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	<video src="/vid/loop.mp4" width=25% height=25% autoplay loop style="margin-top:0px;width:960px;margin-left:auto;margin-right:auto">
+		Your browser does not support the video tag.
+	</video>
+	<!--<img src="loop.gif" alt="Logo"> Mobile Only-->
+</div>
+<audio id="audio" loop>
+	<source src="/audio/bg.mp3" type="audio/mpeg"> Your browser does not support the audio tag.
+</audio>
+<nav class="navbar navbar-default" style="margin-bottom:0">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+			 aria-expanded="false">
 						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">RM Badminton</a>
-				</div>
-
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn<span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a target="_blank" href="https://www.badmintonbible.com/articles/grips-guide/grip-principles">Posture</a></li>
-								<li><a target="_blank" href="https://www.badmintonbible.com/articles/footwork">Footwork</a></li>
-								<li><a target="_blank" href="https://www.badmintonbible.com/articles/net-shots">Shots</a></li>
-								<li><a target="_blank" href="http://www.badminton-information.com/badminton_exercises.html">Exercises</a></li>
-							</ul>
-						</li>
+			<a class="navbar-brand" href="#">RM Badminton</a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Learn<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a target="_blank" href="https://www.badmintonbible.com/articles/grips-guide/grip-principles">Posture</a></li>
+						<li><a target="_blank" href="https://www.badmintonbible.com/articles/footwork">Footwork</a></li>
+						<li><a target="_blank" href="https://www.badmintonbible.com/articles/net-shots">Shots</a></li>
+						<li><a target="_blank" href="http://www.badminton-information.com/badminton_exercises.html">Exercises</a></li>
 					</ul>
-					<ul class="nav navbar-nav navbar-right">
-					<li>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li>
 					{{#if user}}
-                    <p class="navbar-text">
-                    <strong>Hi,</strong>
-                    {{user.username}}
-                    </p>
-                    </li>
-                    <li>
-                        <a href="/members">Account</a>
-                    </li>
-                    <li>
-                    <a href="/logout">Log Out</a>
-                    </li>
-                    {{else}}
-                    <a data-toggle="modal" href="#modalLogin">Login</a>
-                    </li>
-                    {{/if}}
-						<!--removing modal login window <li><a data-toggle="modal" href="#modalLogin">Login</a></li>-->
-						<!--<li><a data-toggle="modal" href="/signin">Login</a></li>-->
-						<li><a type="button" class="musico" onclick="musictoggle();">
-							<i id="musictoggle" class="fa fa-fw fa-pause mustoggle" aria-hidden="true"></i>
-							<i id="musoverlay" class="fa fa-fw fa-music musoverlay" aria-hidden="true"></i>
-						</a></li>
-					</ul>
-				</div><!-- /.navbar-collapse -->
-			</div><!-- /.container-fluid -->
-		</nav>
-		<!--<div>-->
-		<div class="container">
-			<div class="row post">
-				<!--<div class="col-xs-6 col-centered">-->
-<div class="col-md-8 col-centered">
-    {{#if resetPass}}
-        <div class="alert alert-danger">{{resetPass}}</div>
-    {{/if}}
-                {{#each news}}
-    <div class="panel panel-default box" style="margin-top: 25px">
-					<div class="panel-heading"><h4>{{this.title}}</h4></div>
-					<div class="panel-body">
-					<h5>{{this.created_at}} by {{this.author.firstname}} {{this.author.lastname}}</h5>&nbsp;
-					{{{this.body}}}
+					<p class="navbar-text">
+						<strong>Hi,</strong> {{user.username}}
+					</p>
+				</li>
+				<li>
+					<a href="/members">Account</a>
+				</li>
+				<li>
+					<a href="/logout">Log Out</a>
+				</li>
+				{{else}}
+				<a data-toggle="modal" href="#modalLogin">Login</a>
+				</li>
+				{{/if}}
+				<!--removing modal login window <li><a data-toggle="modal" href="#modalLogin">Login</a></li>-->
+				<!--<li><a data-toggle="modal" href="/signin">Login</a></li>-->
+				<li>
+					<a type="button" class="musico" onclick="musictoggle();">
+						<i id="musictoggle" class="fa fa-fw fa-pause mustoggle" aria-hidden="true"></i>
+						<i id="musoverlay" class="fa fa-fw fa-music musoverlay" aria-hidden="true"></i>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container-fluid -->
+</nav>
+<!--<div>-->
+<div class="container">
+	<div class="row post">
+		<!--<div class="col-xs-6 col-centered">-->
+		<div class="col-md-8 col-centered">
+			{{#if resetPass}}
+			<div class="alert alert-danger">{{resetPass}}</div>
+			{{/if}} {{#each news}}
+			<div class="panel panel-default box" style="margin-top: 25px">
+				<div class="panel-heading">
+					<h4>{{this.title}}</h4>
 				</div>
+				<div class="panel-body">
+					<h5>{{this.created_at}} by {{this.author.firstname}} {{this.author.lastname}}</h5>&nbsp; {{{this.body}}}
 				</div>
-				{{/each}}
+			</div>
+			{{/each}}
+		</div>
+		<div class="col-md-4 col-centered">
+			<div class="panel panel-default box" style="margin-top: 25px">
+				<div class="panel-heading" style="margin-bottom: 10px">
+					<h4>Upcoming Events</h4>
 				</div>
-				<div class="col-md-4 col-centered">
-                <div class="panel panel-default box" style="margin-top: 25px">
-                            <div class="panel-heading" style="margin-bottom: 10px"><h4>Upcoming Events</h4></div>
-                		        <div class="panel-body">
-                                    <div class="list-group">
-                                        {{#each events}}
-                                            <a href="/event/{{this._id}}" class="list-group-item list-group-item-action"><h2>{{this.name}}</h2> <p>{{this.date}}</p></a>
-                                        {{/each}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-				<!--</div>-->
+				<div class="panel-body">
+					<div class="list-group">
+						{{#each events}}
+						<a href="/event/{{this._id}}" class="list-group-item list-group-item-action">
+							<h2>{{this.name}}</h2>
+							<p>{{this.date}}</p>
+						</a>
+						{{/each}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--</div>-->
 		<!--Modal content goes between content and footer-->
 		<div id="modalLogin" class="modal fade" role="dialog">
 			<div class="modal-dialog">
@@ -104,47 +111,48 @@
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>-->
 					<div class="modal-body">
-					<div class="mainbox">
-					{{#if message}}
-                        <div class="alert alert-danger">{{message}}</div>
-                    {{/if}}
-                      <h1 style="text-align:center;margin-bottom: 25px">Sign in</h1>
-                      &nbsp;
-                      <div style="text-align:center;" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-                      <form id="local-sign-in" class="form-signin" action="/login" method="post">
-                          <div class="input-group">
-                              <span class="input-group-addon">
+						<div class="mainbox">
+							{{#if message}}
+							<div class="alert alert-danger">{{message}}</div>
+							{{/if}}
+							<h1 style="text-align:center;margin-bottom: 25px">Sign in</h1>
+							&nbsp;
+							<div style="text-align:center;" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+								<form id="local-sign-in" class="form-signin" action="/login" method="post">
+									<div class="input-group">
+										<span class="input-group-addon">
                                            <i class="fa fa-fw fa-user">
                                           </i>
                                       </span>
-                              <input type="text" name="username" class="form-control" placeholder="Username" autofocus/>
-                          </div>
-                          <div style="margin-bottom: 25px" class="input-group">
-                              <span class="input-group-addon">
+										<input type="text" name="username" class="form-control" placeholder="Username" autofocus/>
+									</div>
+									<div style="margin-bottom: 25px" class="input-group">
+										<span class="input-group-addon">
                                            <i class="fa fa-fw fa-lock"></i>
                                       </span>
-                              <input type="password" name="password" class="form-control" placeholder="Password"/>
-                          </div>
-                          <div style="text-align:center">
-                              <input type="submit" class="btn btn-success" value="Log In"/>
-                          </div>
-                        </form>
-                        </div>
-                      <p style="text-align:center;margin-top: 130px">
-                        <div style="text-align:center;margin-bottom: 25px">
-                        <!--<div style="text-align:center;display:inline-block;"><a href="/auth/twitter" class="btn btn-info btn-lg" role="button"><span class="fa fa-fw fa-twitter"></span></a></div>
+										<input type="password" name="password" class="form-control" placeholder="Password" />
+									</div>
+									<div style="text-align:center">
+										<input type="submit" class="btn btn-success" value="Log In" />
+									</div>
+								</form>
+							</div>
+							<p style="text-align:center;margin-top: 130px">
+								<div style="text-align:center;margin-bottom: 25px">
+									<!--<div style="text-align:center;display:inline-block;"><a href="/auth/twitter" class="btn btn-info btn-lg" role="button"><span class="fa fa-fw fa-twitter"></span></a></div>
                         <div style="text-align:center;display:inline-block;"><a href="/auth/google" class="btn btn-danger btn-lg" role="button"><span class="fa fa-fw fa-google"></span></a></div>
                         <div style="text-align:center;display:inline-block;"><a href="/auth/facebook" class="btn btn-primary btn-lg" role="button"><span class="fa fa-fw fa-facebook"></span></a></div>-->
-                        </div>
-                        <div style="text-align:center;"><a href="/signup"> or Sign Up</a></div>
-                      </p>
-                    </div>
+								</div>
+								<div style="text-align:center;"><a href="/signup"> or Sign Up</a></div>
+							</p>
+						</div>
 					</div>
 					<!--<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>-->
 				</div>
-
 			</div>
 		</div>
-	<!--</div>-->
+	</div>
+</div>
+<!--</div>-->

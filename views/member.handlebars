@@ -1,16 +1,17 @@
 <div class="container">
-    <div class="panel panel-default box" style="margin-top: 25px">
-            <div class="panel-heading" style="margin-bottom: 10px"><h3>Member Details</h3></div>
-		        <div class="panel-body">
-		            <h2>{{user.firstname}} {{user.lastname}}</h2>
-		            &nbsp;
-		            <p>Username: {{user.username}}</p>
-		            <p>Email: {{user.email}}</p>
-		            <p>Joined On: {{user.dateAdded}}</p>
-                    {{#unless user.admin}}
-                    <p><a href="/deluser/{{user._id}}">Delete User</a></p>
-                    <a href="/resetpass/{{user._id}}">Change Password</a>
-                    {{/unless}}
-		        </div>
-		    </div>
+	<div class="panel panel-default box" style="margin-top: 25px">
+		<div class="panel-heading" style="margin-bottom: 10px">
+			<h3>Member Details</h3>
 		</div>
+		<div class="panel-body">
+			<h2>{{user.firstname}} {{user.lastname}}</h2>
+			&nbsp;
+			<p>Username: {{user.username}}</p>
+			<p>Email: {{user.email}}</p>
+			<p>Joined On: {{user.dateAdded}}</p>
+			{{#unless user.admin}}
+			<p><a href="/deluser/{{user._id}}">Delete User</a></p>
+			<a href="/resetpass/{{user._id}}">Change Password</a> {{/unless}}
+		</div>
+	</div>
+</div>

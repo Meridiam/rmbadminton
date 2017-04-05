@@ -25,34 +25,34 @@ var Event = require('./models/event.js');
 
 //===============PASSPORT===============
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(null, user._id);
 });
 
-passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
+passport.deserializeUser(function (id, done) {
+    User.findById(id, function (err, user) {
         done(err, user);
     });
 });
 
 passport.use('local-signin', new LocalStrategy({
-        passReqToCallback : true
-    },
-    function(req, username, password, done) {
+    passReqToCallback: true
+},
+    function (req, username, password, done) {
         // check in mongo if a user with username exists or not
-        User.findOne({ 'username' :  username },
-            function(err, user) {
+        User.findOne({ 'username': username },
+            function (err, user) {
                 // In case of any error, return using the done method
                 if (err)
                     return done(err);
                 // Username does not exist, log error & redirect back
-                if (!user){
-                    console.log('User Not Found with username '+username);
+                if (!user) {
+                    console.log('User Not Found with username ' + username);
                     return done(null, false,
                         req.flash('message', 'User Not found.'));
                 }
                 // User exists but wrong password, log the error
-                if (!isValidPassword(user, password)){
+                if (!isValidPassword(user, password)) {
                     console.log('Invalid Password');
                     return done(null, false,
                         req.flash('message', 'Invalid Password'));
@@ -64,27 +64,27 @@ passport.use('local-signin', new LocalStrategy({
         );
     }));
 
-var isValidPassword = function(user, password){
+var isValidPassword = function (user, password) {
     return bCrypt.compareSync(password, user.password);
 };
 
 passport.use('local-signup', new LocalStrategy({
-        passReqToCallback : true
-    },
-    function(req, username, password, done) {
-        findOrCreateUser = function(){
+    passReqToCallback: true
+},
+    function (req, username, password, done) {
+        findOrCreateUser = function () {
             // find a user in Mongo with provided username
-            User.findOne({'username':username},function(err, user) {
+            User.findOne({ 'username': username }, function (err, user) {
                 // In case of any error return
-                if (err){
-                    console.log('Error in SignUp: '+err);
+                if (err) {
+                    console.log('Error in SignUp: ' + err);
                     return done(err);
                 }
                 // already exists
                 if (user) {
                     console.log('User already exists');
                     return done(null, false,
-                        req.flash('message','User Already Exists'));
+                        req.flash('message', 'User Already Exists'));
                 } else {
                     // if there is no user with that email
                     // create the user
@@ -97,9 +97,9 @@ passport.use('local-signup', new LocalStrategy({
                     newUser.lastname = req.param('lastname');
                     newUser.lowerLast = req.param('lastname').toLowerCase();
                     // save the user
-                    newUser.save(function(err) {
-                        if (err){
-                            console.log('Error in Saving user: '+err);
+                    newUser.save(function (err) {
+                        if (err) {
+                            console.log('Error in Saving user: ' + err);
                             throw err;
                         }
                         console.log('User Registration succesful');
@@ -115,7 +115,7 @@ passport.use('local-signup', new LocalStrategy({
     })
 );
 
-var createHash = function(password){
+var createHash = function (password) {
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };
 
@@ -125,7 +125,7 @@ app.use(cookieParser());
 app.use(flash());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(session({secret: 'supernova', saveUninitialized: true, resave: true}));
+app.use(session({ secret: 'supernova', saveUninitialized: true, resave: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -133,7 +133,7 @@ app.use(express.static('public'));
 app.use(express.static('assets'));
 
 // Session-persisted message middleware
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
     var err = req.session.error,
         msg = req.session.notice,
         success = req.session.success;
@@ -158,47 +158,47 @@ app.set('view engine', 'handlebars');
 
 //===============ROUTES=================
 //displays homepage
-app.get('/', function(req, res){
-    Post.find({}).sort('-created_at').populate('author').exec(function ( err, posts ){
+app.get('/', function (req, res) {
+    Post.find({}).sort('-created_at').populate('author').exec(function (err, posts) {
         Event.find({
             happens: {
                 $gte: new Date()
             }
         })
             .sort('happens')
-            .exec(function (err, events){
-            res.render( 'home', {
-                user: req.user,
-                news: posts,
-                events: events,
-                message: req.flash('message'),
-                resetPass: req.flash('resetPass')
+            .exec(function (err, events) {
+                res.render('home', {
+                    user: req.user,
+                    news: posts,
+                    events: events,
+                    message: req.flash('message'),
+                    resetPass: req.flash('resetPass')
+                });
             });
-        });
     });
 });
 
 //displays signup page
-app.get('/signup', function(req, res){
-    res.render('signup', { message: req.flash('message')});
+app.get('/signup', function (req, res) {
+    res.render('signup', { message: req.flash('message') });
 });
 
 //sends the request through local signup strategy, and if successful takes user to homepage, otherwise returns then to signin page
 app.post('/local-reg', passport.authenticate('local-signup', {
-        successRedirect: '/',
-        failureRedirect: '/signup'
-    })
+    successRedirect: '/',
+    failureRedirect: '/signup'
+})
 );
 
 //sends the request through local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page
 app.post('/login', passport.authenticate('local-signin', {
-        successRedirect: '/',
-        failureRedirect: '/'
-    })
+    successRedirect: '/',
+    failureRedirect: '/'
+})
 );
 
 //logs user out of site, deleting them from the session, and returns to homepage
-app.get('/logout', isRegistered, function(req, res){
+app.get('/logout', isRegistered, function (req, res) {
     var name = req.user.username;
     console.log("LOGGING OUT " + req.user.username);
     req.logout();
@@ -206,29 +206,29 @@ app.get('/logout', isRegistered, function(req, res){
     req.session.notice = "You have successfully been logged out " + name + "!";
 });
 
-app.get('/members', isRegistered, function(req, res){
+app.get('/members', isRegistered, function (req, res) {
     User.find()
         .sort({ lowerLast: 1 })
-        .exec(function ( err, users ) {
+        .exec(function (err, users) {
             Event.find()
                 .sort('-happens')
-                .exec(function (err, events){
-                User.findOne({'_id': req.user._id})
-                    .populate('events')
-                    .exec(function (err, user) {
-                        res.render('members', {
-                            user: req.user,
-                            members: users,
-                            events: events,
-                            personals: user.events
+                .exec(function (err, events) {
+                    User.findOne({ '_id': req.user._id })
+                        .populate('events')
+                        .exec(function (err, user) {
+                            res.render('members', {
+                                user: req.user,
+                                members: users,
+                                events: events,
+                                personals: user.events
+                            });
                         });
-                    });
-                console.log(JSON.stringify(users, null, "\t"));
-            });
+                    console.log(JSON.stringify(users, null, "\t"));
+                });
         });
 });
 
-app.post('/newpost', isAdmin, function(req, res){
+app.post('/newpost', isAdmin, function (req, res) {
     var title = req.body.title,
         //html = converter.makeHtml(req.body.info);
         html = md.render(req.body.info);
@@ -239,15 +239,15 @@ app.post('/newpost', isAdmin, function(req, res){
     newPost.author = req.user._id;
 
     // save the user
-    newPost.save(function(err) {
-        if (err){
-            console.log('Error in Saving user: '+err);
+    newPost.save(function (err) {
+        if (err) {
+            console.log('Error in Saving user: ' + err);
             throw err;
         }
         if (!err) {
             Post.find()
                 .populate('author')
-                .exec(function(error, posts) {
+                .exec(function (err, posts) {
                     console.log(JSON.stringify(posts, null, "\t"))
                 });
             res.redirect('/');
@@ -255,7 +255,7 @@ app.post('/newpost', isAdmin, function(req, res){
     });
 });
 
-app.post('/newevent', isAdmin, function(req, res){
+app.post('/newevent', isAdmin, function (req, res) {
     var title = req.body.name;
     var text = req.body.desc;
     var date = req.body.date;
@@ -269,18 +269,18 @@ app.post('/newevent', isAdmin, function(req, res){
     newEvent.duration = duration;
 
     // save the user
-    newEvent.save(function(err) {
-        if (err){
-            console.log('Error in Saving user: '+ err);
+    newEvent.save(function (err) {
+        if (err) {
+            console.log('Error in Saving user: ' + err);
             throw err;
         }
-            res.redirect('/');
+        res.redirect('/');
     });
 });
 
-app.get('/member/:id', isAdmin, function(req, res){
-    User.findOne({ '_id' :  req.params.id },
-        function(err, user) {
+app.get('/member/:id', isAdmin, function (req, res) {
+    User.findOne({ '_id': req.params.id },
+        function (err, user) {
             // In case of any error, return using the done method
             if (err) {
                 return done(err);
@@ -293,9 +293,9 @@ app.get('/member/:id', isAdmin, function(req, res){
     );
 });
 
-app.get('/event/:id', isRegistered, function(req, res){
-    Event.findOne({ '_id' :  req.params.id },
-        function(err, event) {
+app.get('/event/:id', isRegistered, function (req, res) {
+    Event.findOne({ '_id': req.params.id },
+        function (err, event) {
             // In case of any error, return using the done method
             if (err) {
                 return done(err);
@@ -331,19 +331,19 @@ app.get('/event/:id', isRegistered, function(req, res){
     );
 });
 
-app.get('/addevent/:id', isRegistered, function(req, res){
+app.get('/addevent/:id', isRegistered, function (req, res) {
     User.findByIdAndUpdate(
         req.user,
-        {$push: {'events': req.params.id}},
-        {safe: true, upsert: true, new : true},
-        function(err, user) {
-            if(err) {
+        { $push: { 'events': req.params.id } },
+        { safe: true, upsert: true, new: true },
+        function (err, user) {
+            if (err) {
                 console.log(err);
                 return done(err);
             }
             User.find({})
                 .populate('events')
-                .exec(function(error, user) {
+                .exec(function (err, user) {
                     console.log(JSON.stringify(user, null, "\t"));
                 });
             res.redirect('/members');
@@ -351,18 +351,18 @@ app.get('/addevent/:id', isRegistered, function(req, res){
     );
 });
 
-app.get('/rmevent/:id', isRegistered, function(req, res){
+app.get('/rmevent/:id', isRegistered, function (req, res) {
     User.findByIdAndUpdate(
         req.user,
-        {$pull: {'events': req.params.id}},
-        {safe: true, upsert: true, new : true},
-        function(err, user) {
-            if(err) {
+        { $pull: { 'events': req.params.id } },
+        { safe: true, upsert: true, new: true },
+        function (err, user) {
+            if (err) {
                 console.log(err);
                 return done(err);
             }
             User.find({})
-                .exec(function(error, user) {
+                .exec(function (err, user) {
                     console.log(JSON.stringify(user, null, "\t"));
                 });
             res.redirect('/members');
@@ -370,37 +370,38 @@ app.get('/rmevent/:id', isRegistered, function(req, res){
     );
 });
 
-app.get('/delevent/:id', isAdmin, function(req, res){
-    Event.find({'_id': req.params.id})
+app.get('/delevent/:id', isAdmin, function (req, res) {
+    Event.find({ '_id': req.params.id })
         .remove()
-        .exec(function (err){
-            if (err){
+        .exec(function (err) {
+            if (err) {
                 return done(err);
             }
             res.redirect('/members');
         });
 });
 
-app.post('/resetpwd/:id', isRegistered, function(req, res){
-    User.findOne({'_id': req.params.id})
-        .exec(function (err, user){
-            if (err){
+app.post('/resetpwd/:id', isRegistered, function (req, res) {
+    User.findOne({ '_id': req.params.id })
+        .exec(function (err, user) {
+            if (err) {
                 return done(err);
             }
-            console.log('old password hash is : '+user.password);
-            if(req.user.admin){
-                User.findOneAndUpdate({'_id': req.params.id }, { $set:
+            console.log('old password hash is : ' + user.password);
+            if (req.user.admin) {
+                User.findOneAndUpdate({ '_id': req.params.id }, {
+                    $set:
                     {
                         password: createHash(req.body.password)
                     }
-                }, function (err, user){
-                    console.log('password has reset to: '+user.password);
+                }, function (err, user) {
+                    console.log('password has reset to: ' + user.password);
                     req.flash('resetPass', 'Successfully Changed Password');
                     res.redirect("/");
                 });
             } else {
                 if (bCrypt.compareSync(req.body.oldpass, user.password)) {
-                    User.findOneAndUpdate({'_id': req.params.id}, {
+                    User.findOneAndUpdate({ '_id': req.params.id }, {
                         $set: {
                             password: createHash(req.body.password)
                         }
@@ -411,23 +412,23 @@ app.post('/resetpwd/:id', isRegistered, function(req, res){
                     });
                 } else {
                     req.flash('message', 'Incorrect Old Password');
-                    res.render('resetpwd', {message: req.flash('message')});
+                    res.render('resetpwd', { message: req.flash('message') });
                 }
             }
         });
 });
 
-app.get('/resetpass/:id', isRegistered, function(req, res){
+app.get('/resetpass/:id', isRegistered, function (req, res) {
     res.render('resetpwd', {
         'user': req.params.id
     })
 });
 
-app.get('/deluser/:id', isAdmin, function(req, res){
-    User.find({'_id': req.params.id})
+app.get('/deluser/:id', isAdmin, function (req, res) {
+    User.find({ '_id': req.params.id })
         .remove()
-        .exec(function (err){
-            if (err){
+        .exec(function (err) {
+            if (err) {
                 return done(err);
             }
             res.redirect('/members');
@@ -435,8 +436,8 @@ app.get('/deluser/:id', isAdmin, function(req, res){
 });
 
 
-function isRegistered(req, res, next){
-    if(req.isAuthenticated()){
+function isRegistered(req, res, next) {
+    if (req.isAuthenticated()) {
         console.log('cool you are a member, carry on your way');
         next();
     } else {
@@ -445,8 +446,8 @@ function isRegistered(req, res, next){
     }
 }
 
-function isAdmin(req, res, next){
-    if(req.isAuthenticated() && req.user.admin){
+function isAdmin(req, res, next) {
+    if (req.isAuthenticated() && req.user.admin) {
         console.log('cool you are an admin, carry on your way');
         next();
     } else {

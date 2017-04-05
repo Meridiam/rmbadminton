@@ -1,22 +1,25 @@
 {{#if user.admin}}
 <div class="container">
-<div class="row">
-    <div class="col-md-4 col-centered">
-        <div class="panel panel-default box" style="margin-top: 25px">
-            <div class="panel-heading" style="margin-bottom: 10px"><h4>Member List</h4></div>
-		        <div class="panel-body">
+    <div class="row">
+        <div class="col-md-4 col-centered">
+            <div class="panel panel-default box" style="margin-top: 25px">
+                <div class="panel-heading" style="margin-bottom: 10px">
+                    <h4>Member List</h4>
+                </div>
+                <div class="panel-body">
                     <div class="list-group">
                         {{#each members}}
-                            <a href="/member/{{this._id}}" class="list-group-item list-group-item-action">{{this.firstname}} {{this.lastname}}</a>
-                        {{/each}}
+                        <a href="/member/{{this._id}}" class="list-group-item list-group-item-action">{{this.firstname}} {{this.lastname}}</a>                        {{/each}}
                         <a href="/" class="list-group-item list-group-item-action list-group-item-danger">Back</a>
                     </div>
                 </div>
             </div>
         </div>
-    <div class="col-md-8 col-centered">
-        <div class="panel panel-default box" style="margin-top: 25px">
-            <div class="panel-heading" style="margin-bottom: 10px"><h4>New Post</h4></div>
+        <div class="col-md-8 col-centered">
+            <div class="panel panel-default box" style="margin-top: 25px">
+                <div class="panel-heading" style="margin-bottom: 10px">
+                    <h4>New Post</h4>
+                </div>
                 <div class="panel-body">
                     <form id="newposting" class="form-horizontal" action="/newpost" method="post">
                         <div class="form-group row">
@@ -26,13 +29,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                              <label for="info" class="col-sm-2 col-form-label">Main Body: </label>
-                              <div class="col-sm-10">
+                            <label for="info" class="col-sm-2 col-form-label">Main Body: </label>
+                            <div class="col-sm-10">
                                 <textarea type="text" class="form-control" name="info" id="info" placeholder="Type something here..." rows="20"></textarea>
-                              </div>
+                            </div>
                         </div>
                         <div>
-                            <input type="submit" class="btn btn-success" value="Post"/>
+                            <input type="submit" class="btn btn-success" value="Post" />
                         </div>
                     </form>
                 </div>
@@ -40,85 +43,98 @@
         </div>
     </div>
     <div class="row">
-    <div class="col-md-4 col-centered">
+        <div class="col-md-4 col-centered">
             <div class="panel panel-default box" style="margin-top: 25px">
-                <div class="panel-heading" style="margin-bottom: 10px"><h4>Event List</h4></div>
-    		        <div class="panel-body">
-                        <div class="list-group">
-                            {{#each events}}
-                                <a href="/event/{{this._id}}" class="list-group-item list-group-item-action"><h2>{{this.name}}</h2><p>{{this.date}}</p></a>
-                            {{/each}}
-                        </div>
-                    </div>
+                <div class="panel-heading" style="margin-bottom: 10px">
+                    <h4>Event List</h4>
                 </div>
-            </div>
-        <div class=col-md-8 col-centered">
-            <div class="panel panel-default box" style="margin-top: 25px">
-                <div class="panel-heading" style="margin-bottom: 10px"><h4>New Event</h4></div>
-                    <div class="panel-body">
-                        <form id="newevents" class="form-horizontal" action="/newevent" method="post">
-                            <div class="form-group row">
-                                <label for="name" class="col-sm-2 col-form-label">Name: </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="name" id="name" placeholder="Title*">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="name" class="col-sm-2 col-form-label">Date: </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="date" id="date" placeholder="mm/dd/yyyy">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="dur" class="col-sm-2 col-form-label">Duration: </label>
-                                <div class="col-sm-10">
-                                    <input type="number" class="form-control" name="dur" id="dur" placeholder="Duration in minutes">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                  <label for="desc" class="col-sm-2 col-form-label">Description: </label>
-                                  <div class="col-sm-10">
-                                    <textarea type="text" class="form-control" name="desc" id="desc" placeholder="Type something here..." rows="20"></textarea>
-                                  </div>
-                            </div>
-                            <div>
-                                <input type="submit" class="btn btn-success" value="Make Event"/>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-</div>
-{{else}}
-<div class="container">
-<div class="col-md-8 col-centered">
-<div class="panel panel-default box" style="margin-top: 25px">
-            <div class="panel-heading" style="margin-bottom: 10px"><h4>My Events</h4></div>
-		        <div class="panel-body">
+                <div class="panel-body">
                     <div class="list-group">
-                        {{#each personals}}
-                            <a href="/event/{{this._id}}" class="list-group-item list-group-item-action"><h2>{{this.name}}</h2> <p>{{this.date}}</p></a>
-                            <a href="/rmevent/{{this._id}}" style="margin-bottom:25px" class="btn btn-danger">Delete</a>
+                        {{#each events}}
+                        <a href="/event/{{this._id}}" class="list-group-item list-group-item-action">
+                            <h2>{{this.name}}</h2>
+                            <p>{{this.date}}</p>
+                        </a>
                         {{/each}}
                     </div>
                 </div>
             </div>
         </div>
-    <div class="col-md-4 col-centered">
-        <div class="panel panel-default box" style="margin-top: 25px">
-            <div class="panel-heading"><h4>Account Info</h4></div>
-        		 <div class="panel-body">
-        		    <h2 style="margin-bottom:25px">{{user.firstname}} {{user.lastname}}</h2>
-        		    <p>Username: {{user.username}}</p>
-        		    <p>Email: {{user.email}}</p>
-        		    <p>Joined: {{user.dateAdded}}</p>
-                     <p><a href="/resetpass/{{user._id}}">Change Password</a></p>
-        		    <a href="/">Back</a>
-        		 </div>
+        <div class="col-md-8 col-centered ">
+            <div class="panel panel-default box " style="margin-top: 25px ">
+                <div class="panel-heading " style="margin-bottom: 10px ">
+                    <h4>New Event</h4>
+                </div>
+                <div class="panel-body ">
+                    <form id="newevents " class="form-horizontal " action="/newevent " method="post ">
+                        <div class="form-group row ">
+                            <label for="name " class="col-sm-2 col-form-label ">Name: </label>
+                            <div class="col-sm-10 ">
+                                <input type="text " class="form-control " name="name " id="name " placeholder="Title* ">
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="name " class="col-sm-2 col-form-label ">Date: </label>
+                            <div class="col-sm-10 ">
+                                <input type="text " class="form-control " name="date " id="date " placeholder="mm/dd/yyyy ">
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="dur " class="col-sm-2 col-form-label ">Duration: </label>
+                            <div class="col-sm-10 ">
+                                <input type="number " class="form-control " name="dur " id="dur " placeholder="Duration
+            in minutes ">
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="desc " class="col-sm-2 col-form-label ">Description: </label>
+                            <div class="col-sm-10 ">
+                                <textarea type="text " class="form-control " name="desc " id="desc " placeholder="Type
+            something here... " rows="20 "></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="submit " class="btn btn-success " value="Make Event " />
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+</div>
+{{else}}
+<div class="container ">
+    <div class="col-md-8 col-centered ">
+        <div class="panel panel-default box " style="margin-top: 25px ">
+            <div class="panel-heading " style="margin-bottom: 10px ">
+                <h4>My Events</h4>
+            </div>
+            <div class="panel-body ">
+                <div class="list-group ">
+                    {{#each personals}}
+                    <a href="/event/{{this._id}} " class="list-group-item list-group-item-action ">
+                        <h2>{{this.name}}</h2>
+                        <p>{{this.date}}</p>
+                    </a>
+                    <a href="/rmevent/{{this._id}} " style="margin-bottom:25px " class="btn btn-danger ">Delete</a> {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-centered ">
+        <div class="panel panel-default box " style="margin-top: 25px ">
+            <div class="panel-heading ">
+                <h4>Account Info</h4>
+            </div>
+            <div class="panel-body ">
+                <h2 style="margin-bottom:25px ">{{user.firstname}} {{user.lastname}}</h2>
+                <p>Username: {{user.username}}</p>
+                <p>Email: {{user.email}}</p>
+                <p>Joined: {{user.dateAdded}}</p>
+                <p><a href="/resetpass/{{user._id}} ">Change Password</a></p>
+                <a href="/ ">Back</a>
+            </div>
+        </div>
+    </div>
 {{/if}}

@@ -1,22 +1,20 @@
 <div class="container">
     <div class="panel panel-default box" style="margin-top: 25px">
-            <div class="panel-heading"><h3 style="display:inline-block;margin-top:35px">Event Details</h3>
-            {{#if inevents}}
-            {{#unless admin}}
+        <div class="panel-heading">
+            <h3 style="display:inline-block;margin-top:35px">Event Details</h3>
+            {{#if inevents}} {{#unless admin}}
             <div style="margin-bottom:20px;margin-left:895px;text-align:right;display:inline-block;"><a href="/addevent/{{event._id}}" class="btn btn-danger btn-lg" role="button"><span class="fa fa-fw fa-plus"></span></a></div>
-            {{/unless}}
-            {{/if}}
-            {{#if admin}}
+            {{/unless}} {{/if}} {{#if admin}}
             <div style="margin-bottom:20px;margin-left:895px;text-align:right;display:inline-block;"><a href="/delevent/{{event._id}}" class="btn btn-danger btn-lg" role="button"><span class="fa fa-fw fa-times"></span></a></div>
             {{/if}}
-            </div>
-		        <div class="panel-body">
-		            <h2>{{event.name}}</h2>
-		            <h5>{{event.date}}</h5>
-		            <h5 style="margin-bottom:25px">{{event.duration}} minutes</h5>
-		            <p style="margin-bottom:25px">{{event.desc}}</p>
-		            <h5 style="text-align:left;">Created On: {{event.created_at}}</h5>
-		            <a href="/">Back</a>
-		        </div>
-		    </div>
-		</div>
+        </div>
+        <div class="panel-body">
+            <h2>{{event.name}}</h2>
+            <h5>{{event.date}}</h5>
+            <h5 style="margin-bottom:25px">{{event.duration}} minutes</h5>
+            <p style="margin-bottom:25px">{{event.desc}}</p>
+            <h5 style="text-align:left;">Created On: {{event.created_at}}</h5>
+            <a href="/">Back</a>
+        </div>
+    </div>
+</div>

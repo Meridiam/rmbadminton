@@ -1,32 +1,35 @@
 {{#if message}}
-    <div class="alert alert-danger" style="text-align:center">{{message}}</div>
+<div class="alert alert-danger" style="text-align:center">{{message}}</div>
 {{/if}}
 <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-<div class="panel panel-info">
-					<div class="panel-heading">
-					<div class="panel-title">Reset Password</div>
-					</div>
-					<div style="padding-top:30px" class="panel-body">
-					<form id="resetpwd" class="form-horizontal" action="/resetpwd/{{user}}" method="post" onsubmit="return checkResetPass(this);">
-                        <div style="margin-bottom: 25px" class="input-group">
-                            <span class="input-group-addon">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="panel-title">Reset Password</div>
+        </div>
+        <div style="padding-top:30px" class="panel-body">
+            <form id="resetpwd" class="form-horizontal" action="/resetpwd/{{user}}" method="post" onsubmit="return checkResetPass(this);">
+                <div style="margin-bottom: 25px" class="input-group">
+                    <span class="input-group-addon">
                                          <i class="fa fa-fw fa-lock" style="width: 14px"></i>
                                     </span>
-                            <input type="text" name="oldpass" class="form-control" placeholder="Old Password*" autofocus required/>
-                        </div>
-                        <div style="margin-bottom: 25px" class="input-group">
-                            <span class="input-group-addon">
+                    <input type="text" name="oldpass" class="form-control" placeholder="Old Password*" autofocus required/>
+                </div>
+                <div style="margin-bottom: 25px" class="input-group">
+                    <span class="input-group-addon">
                                          <i class="fa" style="width: 14px"></i>
                                     </span>
-                            <input type="password" name="password" class="form-control" placeholder="New Password (6+ characters)*" required/>
-                        </div>
-                        <div style="margin-bottom: 25px" class="input-group">
-                            <span class="input-group-addon">
+                    <input type="password" name="password" class="form-control" placeholder="New Password (6+ characters)*" required/>
+                </div>
+                <div style="margin-bottom: 25px" class="input-group">
+                    <span class="input-group-addon">
                                  <i class="fa" style="width: 14px"></i>
                             </span>
-                            <input type="password" name="pwd2" class="form-control" placeholder="Confirm New Password*" required/>
-                        </div>
-                        <div>
-                            <input type="submit" class="btn btn-success" value="Register"/>
-                        </div>
-                      </form></div></div></div>
+                    <input type="password" name="pwd2" class="form-control" placeholder="Confirm New Password*" required/>
+                </div>
+                <div>
+                    <input type="submit" class="btn btn-success" value="Register" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
