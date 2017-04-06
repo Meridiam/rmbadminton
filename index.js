@@ -1,14 +1,21 @@
 var express = require('express'),
+    //handlebars-express compatiblility
     exphbs = require('express-handlebars'),
+    //parsing cookies
     cookieParser = require('cookie-parser'),
+    //parsing request body
     bodyParser = require('body-parser'),
+    //manage sessions
     session = require('express-session'),
+    //User registration, verification, session management
     passport = require('passport'),
+    //Local User authentication
     LocalStrategy = require('passport-local'),
+    //Password hashing and password verification
     bCrypt = require('bcryptjs'),
+    //Send messages to views for display
     flash = require('connect-flash'),
-    //showdown  = require('showdown'),
-    //converter = new showdown.Converter(),
+    //Remarkable Markdown tp HTML parser
     Remarkable = require('remarkable'),
     md = new Remarkable();
 
@@ -17,23 +24,35 @@ var express = require('express'),
 //    funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
 
 var app = express();
+//Connect to MongoDB
 var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI);
+//Load Models
 var User = require('./models/user.js');
 var Post = require('./models/post.js');
 var Event = require('./models/event.js');
 
 //===============PASSPORT===============
 
+/*
+=============AUXILIARY FUNCTIONS==============
+*/
+
+//Add User session
 passport.serializeUser(function (user, done) {
     done(null, user._id);
 });
 
+//Remove User session
 passport.deserializeUser(function (id, done) {
     User.findById(id, function (err, user) {
         done(err, user);
     });
 });
+
+/*
+================USER AUTHENTICATION================
+*/
 
 passport.use('local-signin', new LocalStrategy({
     passReqToCallback: true
@@ -64,9 +83,11 @@ passport.use('local-signin', new LocalStrategy({
         );
     }));
 
+//==============AUXILIARY FUNCTION===============
 var isValidPassword = function (user, password) {
     return bCrypt.compareSync(password, user.password);
 };
+//===============================================
 
 passport.use('local-signup', new LocalStrategy({
     passReqToCallback: true
@@ -115,9 +136,11 @@ passport.use('local-signup', new LocalStrategy({
     })
 );
 
+//==============AUXILIARY FUNCTION===============
 var createHash = function (password) {
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };
+//===============================================
 
 //===============EXPRESS================
 // Configure Express
@@ -206,6 +229,11 @@ app.get('/logout', isRegistered, function (req, res) {
     req.session.notice = "You have successfully been logged out " + name + "!";
 });
 
+/*
+===========Management Routes============
+*/
+
+//User/Admin Management Panel
 app.get('/members', isRegistered, function (req, res) {
     User.find()
         .sort({ lowerLast: 1 })
@@ -228,9 +256,32 @@ app.get('/members', isRegistered, function (req, res) {
         });
 });
 
+//Render reset password screen
+app.get('/resetpass/:id', isRegistered, function (req, res) {
+    res.render('resetpwd', {
+        'user': req.params.id
+    })
+});
+
+/*
+=============CRUD ROUTES=============
+*/
+
+//API for deleting users
+app.get('/deluser/:id', isAdmin, function (req, res) {
+    User.find({ '_id': req.params.id })
+        .remove()
+        .exec(function (err) {
+            if (err) {
+                return done(err);
+            }
+            res.redirect('/members');
+        });
+});
+
+//API for creating posts through HTTP POST
 app.post('/newpost', isAdmin, function (req, res) {
     var title = req.body.title,
-        //html = converter.makeHtml(req.body.info);
         html = md.render(req.body.info);
 
     var newPost = new Post();
@@ -255,6 +306,19 @@ app.post('/newpost', isAdmin, function (req, res) {
     });
 });
 
+//API for deleting posts
+app.get('/delpost/:id', isAdmin, function (req, res) {
+    Post.find({ '_id': req.params.id })
+        .remove()
+        .exec(function (err) {
+            if (err) {
+                return done(err);
+            }
+            res.redirect('/');
+        });
+});
+
+//API for creating new events through HTTP POST
 app.post('/newevent', isAdmin, function (req, res) {
     var title = req.body.name;
     var text = req.body.desc;
@@ -268,7 +332,7 @@ app.post('/newevent', isAdmin, function (req, res) {
     newEvent.happens = new Date(date);
     newEvent.duration = duration;
 
-    // save the user
+    //save the user
     newEvent.save(function (err) {
         if (err) {
             console.log('Error in Saving user: ' + err);
@@ -278,6 +342,19 @@ app.post('/newevent', isAdmin, function (req, res) {
     });
 });
 
+//API for deleting events
+app.get('/delevent/:id', isAdmin, function (req, res) {
+    Event.find({ '_id': req.params.id })
+        .remove()
+        .exec(function (err) {
+            if (err) {
+                return done(err);
+            }
+            res.redirect('/members');
+        });
+});
+
+//API for READing User data
 app.get('/member/:id', isAdmin, function (req, res) {
     User.findOne({ '_id': req.params.id },
         function (err, user) {
@@ -293,6 +370,7 @@ app.get('/member/:id', isAdmin, function (req, res) {
     );
 });
 
+//API for READing Event data
 app.get('/event/:id', isRegistered, function (req, res) {
     Event.findOne({ '_id': req.params.id },
         function (err, event) {
@@ -331,6 +409,7 @@ app.get('/event/:id', isRegistered, function (req, res) {
     );
 });
 
+//API for adding Events to Users
 app.get('/addevent/:id', isRegistered, function (req, res) {
     User.findByIdAndUpdate(
         req.user,
@@ -351,6 +430,7 @@ app.get('/addevent/:id', isRegistered, function (req, res) {
     );
 });
 
+//API for removing Events from Users
 app.get('/rmevent/:id', isRegistered, function (req, res) {
     User.findByIdAndUpdate(
         req.user,
@@ -370,17 +450,7 @@ app.get('/rmevent/:id', isRegistered, function (req, res) {
     );
 });
 
-app.get('/delevent/:id', isAdmin, function (req, res) {
-    Event.find({ '_id': req.params.id })
-        .remove()
-        .exec(function (err) {
-            if (err) {
-                return done(err);
-            }
-            res.redirect('/members');
-        });
-});
-
+//API for UPDATING User password field w/password verification & admin privileges
 app.post('/resetpwd/:id', isRegistered, function (req, res) {
     User.findOne({ '_id': req.params.id })
         .exec(function (err, user) {
@@ -418,24 +488,11 @@ app.post('/resetpwd/:id', isRegistered, function (req, res) {
         });
 });
 
-app.get('/resetpass/:id', isRegistered, function (req, res) {
-    res.render('resetpwd', {
-        'user': req.params.id
-    })
-});
+/*
+===========AUXILIARY FUNCTIONS============
+*/
 
-app.get('/deluser/:id', isAdmin, function (req, res) {
-    User.find({ '_id': req.params.id })
-        .remove()
-        .exec(function (err) {
-            if (err) {
-                return done(err);
-            }
-            res.redirect('/members');
-        });
-});
-
-
+//Middleware for detecting if a user is verified
 function isRegistered(req, res, next) {
     if (req.isAuthenticated()) {
         console.log('cool you are a member, carry on your way');
@@ -446,6 +503,7 @@ function isRegistered(req, res, next) {
     }
 }
 
+//Middleware for detecting if a user is an admin
 function isAdmin(req, res, next) {
     if (req.isAuthenticated() && req.user.admin) {
         console.log('cool you are an admin, carry on your way');
