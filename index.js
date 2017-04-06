@@ -19,10 +19,6 @@ var express = require('express'),
     Remarkable = require('remarkable'),
     md = new Remarkable();
 
-//We will be creating these two files shortly
-// var config = require('./config.js'), //config file contains all tokens and other private info
-//    funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
-
 var app = express();
 //Connect to MongoDB
 var mongoose = require('mongoose');
@@ -31,8 +27,6 @@ mongoose.connect(process.env.MONGODB_URI);
 var User = require('./models/user.js');
 var Post = require('./models/post.js');
 var Event = require('./models/event.js');
-
-//===============PASSPORT===============
 
 /*
 =============AUXILIARY FUNCTIONS==============
