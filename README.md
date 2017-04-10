@@ -1,12 +1,20 @@
 ## RM Badminton Webapp
 Web Application project for the RM Badminton Club
 
-##Dependencies:
-- MongoDB
-- ExpressJS
-- jQuery
-- Bootstrap
+## Dependencies:
+- Mongoose
+- Express.js
+- Express-Handlebars
 - Node.js
+- jQuery
+- Bootstrap 3
+- Passport.js
+- bCrypt.js
+- Remarkable
 
-##Tools Used:
+## Icon Fonts:
+- FontAwesome
+- GlyphIcons
+
+## Tools Used:
 - npm
