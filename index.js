@@ -19,6 +19,7 @@ var express = require('express'),
     Remarkable = require('remarkable'),
     md = new Remarkable();
 
+//Create app instance
 var app = express();
 //Connect to MongoDB
 var mongoose = require('mongoose');
