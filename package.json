@@ -16,6 +16,7 @@
     "url": "https://github.com/jere407407/ppaw/issues"
   },
   "homepage": "https://github.com/jere407407/ppaw#readme",
+  "engines" : { "node" : ">=6.10.2" },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.1",
