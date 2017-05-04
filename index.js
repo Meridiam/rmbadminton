@@ -279,11 +279,12 @@ app.post('/newpost', isAdmin, function (req, res) {
     var title = req.body.title,
         html = md.render(req.body.info);
 
+    var currentDate = new Date();
     var newPost = new Post();
     newPost.title = title;
     newPost.body = html;
     newPost.author = req.user._id;
-    //newPost.readableDate = 
+    newPost.readableDate = currentDate.getMonth()+"/"+currentDate.getDay()+"/"+currentDate.getFullYear();
 
     // save the user
     newPost.save(function (err) {

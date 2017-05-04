@@ -4,7 +4,7 @@ var postSchema = new mongoose.Schema({
     title: String,
     body: String,
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    //readableDate: String,
+    readableDate: String,
     created_at: { type: Date, default: Date.now }
 });
 
