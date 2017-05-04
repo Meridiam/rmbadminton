@@ -78,7 +78,7 @@
 					<h4>{{this.title}}</h4>
 				</div>
 				<div class="panel-body">
-					<h5>{{this.created_at.getMonth()}} by {{this.author.firstname}} {{this.author.lastname}}</h5>&nbsp; {{{this.body}}}
+					<h5><script>{{this.created_at}}.getMonth()</script> by {{this.author.firstname}} {{this.author.lastname}}</h5>&nbsp; {{{this.body}}}
 				</div>
 			</div>
 			{{/each}}
