@@ -283,6 +283,7 @@ app.post('/newpost', isAdmin, function (req, res) {
     newPost.title = title;
     newPost.body = html;
     newPost.author = req.user._id;
+    //newPost.readableDate = 
 
     // save the user
     newPost.save(function (err) {
